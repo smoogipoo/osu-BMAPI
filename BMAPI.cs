@@ -711,7 +711,7 @@ namespace BMAPI
                             List<string> temps = (List<string>)f1.GetValue(this);
                             if (temps.Count != 0)
                             {
-                                Save("General", "EditorBookmarks:" + string.Join(" ", temps.ToArray()));
+                                Save("Metadata", "Tags:" + string.Join(" ", temps.ToArray()));
                             }
                         }
                         else if (f1.Name == "Events")
