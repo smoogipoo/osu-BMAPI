@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BMAPI
 {
@@ -65,8 +61,8 @@ namespace BMAPI
         public List<TimingPointInfo> TimingPoints = new List<TimingPointInfo>();
 
         //Colours
-        public List<BMAPI.ComboInfo> ComboColours = new List<BMAPI.ComboInfo>();
-        public BMAPI.ColourInfo SliderBorder = new ColourInfo();
+        public List<ComboInfo> ComboColours = new List<ComboInfo>();
+        public ColourInfo SliderBorder = new ColourInfo();
 
         //Hitobjects
         public List<dynamic> HitObjects = new List<dynamic>();

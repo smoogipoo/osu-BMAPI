@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 
 namespace smgiFuncs
 {
@@ -9,7 +6,7 @@ namespace smgiFuncs
     #region "String Datatype"
     public class sString
     {
-        private string _data;
+        internal readonly string _data;
         public sString(String s)
         {
             _data = s;
@@ -47,13 +44,13 @@ namespace smgiFuncs
         {
             int indx = -1;
             int count = 0;
-            indx = _data.IndexOf(splitter, indx + 1);
+            indx = _data.IndexOf(splitter, indx + 1, StringComparison.Ordinal);
             if (indx != -1)
             {
                 while (indx != -1)
                 {
                     count += 1;
-                    indx = _data.IndexOf(splitter, indx + 1);
+                    indx = _data.IndexOf(splitter, indx + 1, StringComparison.Ordinal);
                 }
             }
             return count;
@@ -61,12 +58,11 @@ namespace smgiFuncs
         public int nthDexOf(string splitter, int count)
         {
             int camnt = -1;
-            int indx = 0;
-            indx = _data.IndexOf(splitter);
+            int indx = _data.IndexOf(splitter, StringComparison.Ordinal);
             camnt += 1;
             while (!((camnt == count) | (indx == -1)))
             {
-                indx = _data.IndexOf(splitter, indx + 1);
+                indx = _data.IndexOf(splitter, indx + 1, StringComparison.Ordinal);
                 if (indx == -1)
                 {
                     return indx;
@@ -93,18 +89,15 @@ namespace smgiFuncs
             {
                 return _data.Substring(startindex, _data.Length - startindex);
             }
-            else
+            if (endindex > _data.Length)
             {
-                if (endindex > _data.Length)
-                {
-                    throw new Exception("The endindex value of '" + endindex + "' exceeds the string length.", new Exception("String: " + _data, new Exception("Length: " + _data.Length)));
-                }
-                return _data.Substring(startindex, endindex - startindex);
+                throw new Exception("The endindex value of '" + endindex + "' exceeds the string length.", new Exception("String: " + _data, new Exception("Length: " + _data.Length)));
             }
+            return _data.Substring(startindex, endindex - startindex);
         }
         public int LastIndexOf(string splitter)
         {
-            return _data.LastIndexOf(splitter);
+            return _data.LastIndexOf(splitter, StringComparison.Ordinal);
         }
     }
     #endregion

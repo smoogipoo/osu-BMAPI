@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BMAPI
 {
     public class TimingPointInfo
     {
-        public double Time = 0.0f;
-        public double BPMDelay = 0.0f;
-        public int TimeSignature = 4;
-        public int SampleSet = 0;
-        public int CustomSampleSet = 0;
-        public int VolumePercentage = 100;
-        public bool InheritsBPM = true;
-        public bool KiaiTime = false;
-        public bool OmitFirstBarLine = false;
+        public double time = 0.0f;
+        public double bpmDelay = 0.0f;
+        public int timeSignature = 4;
+        public int sampleSet = 0;
+        public int customSampleSet = 0;
+        public int volumePercentage = 100;
+        public bool inheritsBPM = true;
+        public bool kiaiTime = false;
+        public bool omitFirstBarLine = false;
     }
 }

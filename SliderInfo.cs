@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BMAPI
 {
     public class SliderInfo
     {
-        public PointInfo Location = new PointInfo();
-        public int StartTime = 0;
-        public bool NewCombo = true;
-        public EffectType Effect = EffectType.None;
-        public SliderType Type = SliderType.Linear;
-        public List<object> Points = new List<object>();
-        public int RepeatCount = 0;
-        public int MaxPoints = 0;
+        public PointInfo location = new PointInfo();
+        public int startTime = 0;
+        public bool newCombo = true;
+        public EffectType effect = EffectType.None;
+        public SliderType type = SliderType.Linear;
+        public List<object> points = new List<object>();
+        public int repeatCount = 0;
+        public double maxPoints = 0;
     }
 }

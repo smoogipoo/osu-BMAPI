@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BMAPI
 {
     public class CircleInfo
     {
-        public PointInfo Location = new PointInfo();
-        public int StartTime = 0;
-        public bool NewCombo = true;
-        public EffectType Effect = EffectType.None;
+        public PointInfo location = new PointInfo();
+        public int radius = 128;
+        public int startTime = 0;
+        public bool newCombo = true;
+        public EffectType effect = EffectType.None;
+
+        public bool inCircle(PointInfo cursorLocation)
+        {
+            return Math.Pow(cursorLocation.x - location.x, 2) + Math.Pow(cursorLocation.y - location.y, 2) < radius;
+        }
     }
 }
