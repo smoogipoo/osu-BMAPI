@@ -23,7 +23,7 @@ namespace BMAPI
 
             //Variable init
             BM_Sections.Add("AudioFilename,AudioLeadIn,PreviewTime,Countdown,SampleSet,StackLeniency,Mode,LetterboxInBreaks,SpecialStyle,CountdownOffset,OverlayPosition,SkinPreference,WidescreenStoryboard,UseSkinSprites,StoryFireInFront,EpilepsyWarning,CustomSamples,EditorDistanceSpacing,AudioHash,AlwaysShowPlayfield", "General");
-            BM_Sections.Add("GridSize,BeatDivisor,DistanceSpacing,CurrentTime", "Editor");
+            BM_Sections.Add("GridSize,BeatDivisor,DistanceSpacing,CurrentTime,TimelineZoom", "Editor");
             BM_Sections.Add("Title,TitleUnicode,Artist,ArtistUnicode,Creator,Version,Source,BeatmapID,BeatmapSetID", "Metadata");
             BM_Sections.Add("HPDrainRate,CircleSize,OverallDifficulty,ApproachRate,SliderMultiplier,SliderTickRate", "Difficulty");
 
@@ -352,10 +352,7 @@ namespace BMAPI
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    if (Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) == 5)
-                                        tempCircle.newCombo = true;
-                                    else
-                                        tempCircle.newCombo = false;
+                                    tempCircle.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 5 == 0;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1))
                                     {
                                         case "0":
@@ -392,10 +389,7 @@ namespace BMAPI
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    if (Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) == 6)
-                                        tempSlider.newCombo = true;
-                                    else
-                                        tempSlider.newCombo = false;
+                                    tempSlider.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 6 == 0;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1, line.nthDexOf(",", 4)))
                                     {
                                         case "0":
@@ -468,10 +462,6 @@ namespace BMAPI
                                     tempSpinner.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSpinner.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSpinner.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    if (Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) == 12)
-                                        tempSpinner.newCombo = true;
-                                    else
-                                        tempSpinner.newCombo = false;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1, line.nthDexOf(",", 4)))
                                     {
                                         case "0":
@@ -514,10 +504,7 @@ namespace BMAPI
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    if (Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) == 5)
-                                        tempCircle.newCombo = true;
-                                    else
-                                        tempCircle.newCombo = false;
+                                    tempCircle.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 5 == 0;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1))
                                     {
                                         case "0":
@@ -554,10 +541,7 @@ namespace BMAPI
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    if (Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) == 6)
-                                        tempSlider.newCombo = true;
-                                    else
-                                        tempSlider.newCombo = false;
+                                    tempSlider.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 6 == 0;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1, line.nthDexOf(",", 4)))
                                     {
                                         case "0":
@@ -630,7 +614,6 @@ namespace BMAPI
                                     tempSpinner.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSpinner.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSpinner.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    tempSpinner.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) == 12;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1, line.nthDexOf(",", 4)))
                                     {
                                         case "0":

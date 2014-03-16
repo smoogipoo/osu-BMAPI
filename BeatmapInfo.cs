@@ -37,6 +37,7 @@ namespace BMAPI
         public int? BeatDivisor = null;
         public double? DistanceSpacing = null;
         public int? CurrentTime = null;
+        public double? TimelineZoom = null;
 
         //Metadata
         public string Title;
