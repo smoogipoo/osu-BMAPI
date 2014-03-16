@@ -3,7 +3,7 @@ namespace BMAPI
 {
     public class VideoInfo
     {
-        public int Time = 0;
-        public string Filename = "";
+        public int startTime = 0;
+        public string filename = "";
     }
 }

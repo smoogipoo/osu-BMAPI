@@ -171,21 +171,15 @@ namespace BMAPI
                                 if (eventType.ToString() == "0")
                                 {
                                     BackgroundInfo tempEvent = new BackgroundInfo();
-                                    tempEvent.time = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
-                                    if (line.CountOf(",") > 2)
-                                        tempEvent.filename = line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)).Replace("\"", "");
-                                    else
-                                        tempEvent.filename = line.SubString(line.nthDexOf(",", 1) + 1).Replace("\"", "");
+                                    tempEvent.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
+                                    tempEvent.filename = line.CountOf(",") > 2 ? line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)).Replace("\"", "") : tempEvent.filename = line.SubString(line.nthDexOf(",", 1) + 1).Replace("\"", "");
                                     Info.Events.Add(tempEvent);
                                 }
                                 else if ((eventType.ToString() == "1") || (eventType.ToString().ToLower() == "video"))
                                 {
                                     VideoInfo tempEvent = new VideoInfo();
-                                    tempEvent.Time = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
-                                    if (line.CountOf(",") > 2)
-                                        tempEvent.Filename = line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)).Replace("\"", "");
-                                    else
-                                        tempEvent.Filename = line.SubString(line.nthDexOf(",", 1) + 1).Replace("\"", "");
+                                    tempEvent.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
+                                    tempEvent.filename = line.CountOf(",") > 2 ? line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)).Replace("\"", "") : tempEvent.filename = line.SubString(line.nthDexOf(",", 1) + 1).Replace("\"", "");
                                     Info.Events.Add(tempEvent);
                                 }
                                 else if (eventType.ToString() == "2")
@@ -198,7 +192,7 @@ namespace BMAPI
                                 else if (eventType.ToString() == "3")
                                 {
                                     ColourInfo tempEvent = new ColourInfo();
-                                    tempEvent.time = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
+                                    tempEvent.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempEvent.r = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
                                     tempEvent.g = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3)));
                                     tempEvent.b = Convert.ToInt32(line.SubString(line.nthDexOf(",", 3) + 1));
@@ -727,11 +721,11 @@ namespace BMAPI
                                 {
                                     if (o.GetType() == typeof(BackgroundInfo))
                                     {
-                                        Save("Events", "0," + o.time + ",\"" + o.filename + "\"");
+                                        Save("Events", "0," + o.startTime + ",\"" + o.filename + "\"");
                                     }
                                     else if (o.GetType() == typeof(VideoInfo))
                                     {
-                                        Save("Events", "1," + o.time + ",\"" + o.filename + "\"");
+                                        Save("Events", "1," + o.startTime + ",\"" + o.filename + "\"");
                                     }
                                     else if (o.GetType() == typeof(BreakInfo))
                                     {
@@ -739,7 +733,7 @@ namespace BMAPI
                                     }
                                     else if (o.GetType() == typeof(ColourInfo))
                                     {
-                                        Save("Events", "3," + o.time + "," + o.r + "," + o.g + "," + o.b);
+                                        Save("Events", "3," + o.startTime + "," + o.r + "," + o.g + "," + o.b);
                                     }
                                 }
                             }
@@ -763,7 +757,7 @@ namespace BMAPI
                                             options += 1;
                                         if (o.omitFirstBarLine)
                                             options += 8;
-                                        Save("TimingPoints", o.time + "," + o.bpmDelay + "," + o.timeSignature + "," + o.sampleSet + "," + o.customSampleSet + "," + o.volumePercentage + "," + Convert.ToInt32(o.inheritsBPM) + "," + options);
+                                        Save("TimingPoints", o.time + "," + o.bpmDelay + "," + o.timeSignature + "," + o.sampleSet + "," + o.customSampleSet + "," + o.volumePercentage + "," + Convert.ToInt32(!o.inheritsBPM) + "," + options);
                                     }
                                     break;
                             }
@@ -779,7 +773,7 @@ namespace BMAPI
                             if ((Info.Format >= 5) && (Info.Format <= 12))
                             {
                                 ColourInfo o = (ColourInfo)f1.GetValue(this);
-                                if (o.time != null)
+                                if (o.startTime != null)
                                     Save("Colours", "SliderBorder: " + o.r + "," + o.g + "," + o.b);
                             }
                             break;
