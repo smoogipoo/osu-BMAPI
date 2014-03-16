@@ -38,6 +38,7 @@ namespace BMAPI
 
         private void Parse(string bm)
         {
+            Info.Filename = bm;
             using (StreamReader sR = new StreamReader(bm))
             {
                 string currentSection = "";
@@ -834,7 +835,7 @@ namespace BMAPI
                             }
                             break;
                         default:
-                            if (f1.Name != "Format")
+                            if (f1.Name != "Format" && f1.Name != "Filename")
                             {
                                 if (f1.GetValue(this) != null)
                                 {

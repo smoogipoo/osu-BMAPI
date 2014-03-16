@@ -4,7 +4,11 @@ namespace BMAPI
 {
     public class BeatmapInfo
     {
+        //Info
         public int? Format = null;
+        public string Filename;
+
+        //General
         public string AudioFilename;
         public int? AudioLeadIn = null;
         public int? PreviewTime = null;
