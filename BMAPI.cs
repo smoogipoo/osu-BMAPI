@@ -83,78 +83,79 @@ namespace BMAPI
                         else
                         {
                             //Check if there is a space between : and the data
-                            if (line.SubString(line.nthDexOf(":", 0) + 1, line.nthDexOf(":", 0) + 2) == " ")
-                                cValue = line.SubString(line.nthDexOf(":", 0) + 2);
-                            else
-                                cValue = line.SubString(line.nthDexOf(":", 0) + 1);
+                            cValue = line.SubString(line.nthDexOf(":", 0) + 1, line.nthDexOf(":", 0) + 2) == " " ? line.SubString(line.nthDexOf(":", 0) + 2) : line.SubString(line.nthDexOf(":", 0) + 1);
                         }
 
                         //Import properties into Info
-                        if (cProperty == "EditorBookmarks")
+                        switch (cProperty)
                         {
-                            string[] marks = cValue.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                            foreach (string m in marks)
+                            case "EditorBookmarks":
                             {
-                                if (m != "")
+                                string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (string m in marks.Where(m => m != ""))
+                                {
                                     Info.EditorBookmarks.Add(Convert.ToInt32(m));
+                                }
                             }
-                        }
-                        else if (cProperty == "Bookmarks")
-                        {
-                            string[] marks = cValue.Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                            foreach (string m in marks)
+                                break;
+                            case "Bookmarks":
                             {
-                                if (m != "")
+                                string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (string m in marks.Where(m => m != ""))
+                                {
                                     Info.Bookmarks.Add(Convert.ToInt32(m));
+                                }
                             }
-                        }
-                        else if (cProperty == "Tags")
-                        {
-                            string[] tags = cValue.Split(new [] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                            foreach (string t in tags)
-                                Info.Tags.Add(t);
-                        }
-                        else if (cProperty == "Mode")
-                        {
-                            switch (cValue)
+                                break;
+                            case "Tags":
                             {
-                                case "0":
-                                    Info.Mode = GameMode.osu;
-                                    break;
-                                case "1":
-                                    Info.Mode = GameMode.Taiko;
-                                    break;
-                                case "2":
-                                    Info.Mode = GameMode.CatchtheBeat;
-                                    break;
-                                case "3":
-                                    Info.Mode = GameMode.Mania;
-                                    break;
+                                string[] tags = cValue.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (string t in tags)
+                                    Info.Tags.Add(t);
                             }
-                        }
-                        else if (cProperty == "OverlayPosition")
-                        {
-                            switch (cValue)
+                                break;
+                            case "Mode":
+                                switch (cValue)
+                                {
+                                    case "0":
+                                        Info.Mode = GameMode.osu;
+                                        break;
+                                    case "1":
+                                        Info.Mode = GameMode.Taiko;
+                                        break;
+                                    case "2":
+                                        Info.Mode = GameMode.CatchtheBeat;
+                                        break;
+                                    case "3":
+                                        Info.Mode = GameMode.Mania;
+                                        break;
+                                }
+                                break;
+                            case "OverlayPosition":
+                                switch (cValue)
+                                {
+                                    case "Above":
+                                        Info.OverlayPosition = OverlayOptions.Above;
+                                        break;
+                                    case "Below":
+                                        Info.OverlayPosition = OverlayOptions.Below;
+                                        break;
+                                }
+                                break;
+                            case "AlwaysShowPlayfield":
+                                Info.AlwaysShowPlayfield = Convert.ToBoolean(Convert.ToInt32(cValue));
+                                break;
+                            default:
                             {
-                                case "Above":
-                                    Info.OverlayPosition = OverlayOptions.Above;
-                                    break;
-                                case "Below":
-                                    Info.OverlayPosition = OverlayOptions.Below;
-                                    break;
+                                FieldInfo fi = Info.GetType().GetField(cProperty);
+                                if ((fi.FieldType == typeof(double?)) || (fi.FieldType == typeof(double)))
+                                    fi.SetValue(Info, Convert.ToDouble(cValue));
+                                else if ((fi.FieldType == typeof(int?)) || (fi.FieldType == typeof(int)))
+                                    fi.SetValue(Info, Convert.ToInt32(cValue));
+                                else if (fi.FieldType == typeof(string))
+                                    fi.SetValue(Info, cValue);
+                                break;
                             }
-                        }
-                        else if (cProperty == "AlwaysShowPlayfield")
-                            Info.AlwaysShowPlayfield = Convert.ToBoolean(Convert.ToInt32(cValue));
-                        else
-                        {
-                            FieldInfo fi = Info.GetType().GetField(cProperty);
-                            if ((fi.FieldType == typeof(double?)) || (fi.FieldType == typeof(double)))
-                                fi.SetValue(Info, Convert.ToDouble(cValue));
-                            else if ((fi.FieldType == typeof(int?)) || (fi.FieldType == typeof(int)))
-                                fi.SetValue(Info, Convert.ToInt32(cValue));
-                            else if (fi.FieldType == typeof(string))
-                                fi.SetValue(Info, cValue);
                         }
                         continue;
                     }
@@ -215,7 +216,7 @@ namespace BMAPI
                                 Info.TimingPoints.Add(tempTimingPoint);
                                 break;
                             case 4:
-                                string[] splitString = line.ToString().Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                                string[] splitString = line.ToString().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                                 switch (splitString.Length)
                                 {
                                     case 4:
@@ -238,7 +239,7 @@ namespace BMAPI
 
                                 break;
                             case 5:
-                                splitString = line.ToString().Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                                splitString = line.ToString().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                                 switch (splitString.Length)
                                 {
                                     case 6:
@@ -340,7 +341,7 @@ namespace BMAPI
                     {
                         if (line.SubString(line.ToString().Length - 1) == ",")
                             line = line.SubString(0, line.ToString().Length - 1);
-                        string[] splitString = line.ToString().Split(new [] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] splitString = line.ToString().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
                         switch (Info.Format)
                         {
@@ -352,7 +353,16 @@ namespace BMAPI
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    tempCircle.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 5 == 0;
+                                    int tempNewCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3)));
+                                    if (tempNewCombo == 1)
+                                    {
+                                        tempCircle.newCombo = false;
+                                    }
+                                    else
+                                    {
+                                        tempCircle.newCombo = (tempNewCombo + 1) % 2 == 0;
+                                    }
+
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1))
                                     {
                                         case "0":
@@ -432,7 +442,7 @@ namespace BMAPI
                                             tempSlider.type = SliderType.PassThrough;
                                             break;
                                     }
-                                    string[] pts = line.SubString(line.nthDexOf(",", 4) + 1, line.nthDexOf(",", 5)).Split(new []{ "|" }, StringSplitOptions.None);
+                                    string[] pts = line.SubString(line.nthDexOf(",", 4) + 1, line.nthDexOf(",", 5)).Split(new[] { "|" }, StringSplitOptions.None);
                                     for (int i = 1; i <= pts.Length - 1; i++)
                                     {
                                         PointInfo p = new PointInfo();
@@ -504,7 +514,16 @@ namespace BMAPI
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    tempCircle.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 5 == 0;
+                                    int tempNewCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3)));
+                                    if (tempNewCombo == 1)
+                                    {
+                                        tempCircle.newCombo = false;
+                                    }
+                                    else
+                                    {
+                                        tempCircle.newCombo = (tempNewCombo + 1) % 2 == 0;
+                                    }
+
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1))
                                     {
                                         case "0":
@@ -584,7 +603,7 @@ namespace BMAPI
                                             tempSlider.type = SliderType.PassThrough;
                                             break;
                                     }
-                                    string[] pts = line.SubString(line.nthDexOf(",", 4) + 1, line.nthDexOf(",", 5)).Split(new [] { "|" }, StringSplitOptions.None);
+                                    string[] pts = line.SubString(line.nthDexOf(",", 4) + 1, line.nthDexOf(",", 5)).Split(new[] { "|" }, StringSplitOptions.None);
                                     for (int i = 1; i <= pts.Length - 1; i++)
                                     {
                                         PointInfo p = new PointInfo();
@@ -671,31 +690,31 @@ namespace BMAPI
                     switch (f1.Name)
                     {
                         case "EditorBookmarks":
-                        {
-                            List<int> temps = (List<int>)f1.GetValue(this);
-                            if (temps.Count != 0)
                             {
-                                Save("General", "EditorBookmarks:" + string.Join(",", temps.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToArray()));
+                                List<int> temps = (List<int>)f1.GetValue(this);
+                                if (temps.Count != 0)
+                                {
+                                    Save("General", "EditorBookmarks:" + string.Join(",", temps.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToArray()));
+                                }
                             }
-                        }
                             break;
                         case "Bookmarks":
-                        {
-                            List<int> temps = (List<int>)f1.GetValue(this);
-                            if (temps.Count != 0)
                             {
-                                Save("Editor", "Bookmarks:" + string.Join(",", temps.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToArray()));
+                                List<int> temps = (List<int>)f1.GetValue(this);
+                                if (temps.Count != 0)
+                                {
+                                    Save("Editor", "Bookmarks:" + string.Join(",", temps.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToArray()));
+                                }
                             }
-                        }
                             break;
                         case "Tags":
-                        {
-                            List<string> temps = (List<string>)f1.GetValue(this);
-                            if (temps.Count != 0)
                             {
-                                Save("Metadata", "Tags:" + string.Join(" ", temps.ToArray()));
+                                List<string> temps = (List<string>)f1.GetValue(this);
+                                if (temps.Count != 0)
+                                {
+                                    Save("Metadata", "Tags:" + string.Join(" ", temps.ToArray()));
+                                }
                             }
-                        }
                             break;
                         case "Events":
                             if ((Info.Format >= 3) && (Info.Format <= 12))
@@ -778,7 +797,7 @@ namespace BMAPI
                                             string pointString = "";
                                             foreach (PointInfo p in obj.points)
                                                 pointString += "|" + p.x + ":" + p.y;
-                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + (combo + 1) + "," + (int)obj.effect + "," + obj.type.ToString().Substring(0,1) + pointString + "," + obj.repeatCount + "," + obj.maxPoints + ",");
+                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + (combo + 1) + "," + (int)obj.effect + "," + obj.type.ToString().Substring(0, 1) + pointString + "," + obj.repeatCount + "," + obj.maxPoints + ",");
                                         }
                                         else if (obj.GetType() == typeof(SpinnerInfo))
                                         {
@@ -879,10 +898,9 @@ namespace BMAPI
 
         private string GetSection(string name)
         {
-            foreach (string k in BM_Sections.Keys)
+            foreach (string k in BM_Sections.Keys.Where(k => k.Contains(name)))
             {
-                if (k.Contains(name))
-                    return BM_Sections[k];
+                return BM_Sections[k];
             }
             return "";
         }
