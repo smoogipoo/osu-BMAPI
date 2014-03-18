@@ -399,7 +399,8 @@ namespace BMAPI
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    tempSlider.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 6 == 0;
+                                    int tempNewCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3)));
+                                    tempSlider.newCombo = tempNewCombo != 2 && tempNewCombo % 2 == 0;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1, line.nthDexOf(",", 4)))
                                     {
                                         case "0":
@@ -560,7 +561,8 @@ namespace BMAPI
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
-                                    tempSlider.newCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3))) % 6 == 0;
+                                    int tempNewCombo = Convert.ToInt32(line.SubString(line.nthDexOf(",", 2) + 1, line.nthDexOf(",", 3)));
+                                    tempSlider.newCombo = tempNewCombo != 2 && tempNewCombo % 2 == 0;
                                     switch (line.SubString(line.nthDexOf(",", 3) + 1, line.nthDexOf(",", 4)))
                                     {
                                         case "0":
