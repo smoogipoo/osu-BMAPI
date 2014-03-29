@@ -1,5 +1,4 @@
-﻿
-namespace BMAPI
+﻿namespace BMAPI
 {
     public class ComboInfo
     {

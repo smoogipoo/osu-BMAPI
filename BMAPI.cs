@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using System.Linq;
 using System.Globalization;
 using smgiFuncs;
 
@@ -349,7 +350,7 @@ namespace BMAPI
                                 if (splitString.Length == 5)
                                 {
                                     //Circle
-                                    CircleInfo tempCircle = new CircleInfo();
+                                    BaseCircle tempCircle = new BaseCircle();
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -511,7 +512,7 @@ namespace BMAPI
                                 if (splitString.Length == circleCount)
                                 {
                                     //Circle
-                                    CircleInfo tempCircle = new CircleInfo();
+                                    BaseCircle tempCircle = new BaseCircle();
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -721,23 +722,27 @@ namespace BMAPI
                         case "Events":
                             if ((Info.Format >= 3) && (Info.Format <= 12))
                             {
-                                foreach (dynamic o in (IEnumerable<dynamic>)f1.GetValue(this))
+                                foreach (BaseEvent o in (IEnumerable<BaseEvent>)f1.GetValue(this))
                                 {
                                     if (o.GetType() == typeof(BackgroundInfo))
                                     {
-                                        Save("Events", "0," + o.startTime + ",\"" + o.filename + "\"");
+                                        BackgroundInfo backgroundInfo = (BackgroundInfo)o;
+                                        Save("Events", "0," + o.startTime + ",\"" + backgroundInfo.filename + "\"");
                                     }
                                     else if (o.GetType() == typeof(VideoInfo))
                                     {
-                                        Save("Events", "1," + o.startTime + ",\"" + o.filename + "\"");
+                                        VideoInfo videoInfo = (VideoInfo)o;
+                                        Save("Events", "1," + o.startTime + ",\"" + videoInfo.filename + "\"");
                                     }
                                     else if (o.GetType() == typeof(BreakInfo))
                                     {
-                                        Save("Events", "2," + o.startTime + "," + o.endTime);
+                                        BreakInfo breakInfo = (BreakInfo)o;
+                                        Save("Events", "2," + o.startTime + "," + breakInfo.endTime);
                                     }
                                     else if (o.GetType() == typeof(ColourInfo))
                                     {
-                                        Save("Events", "3," + o.startTime + "," + o.r + "," + o.g + "," + o.b);
+                                        ColourInfo colourInfo = (ColourInfo)o;
+                                        Save("Events", "3," + o.startTime + "," + colourInfo.r + "," + colourInfo.g + "," + colourInfo.b);
                                     }
                                 }
                             }
@@ -777,56 +782,55 @@ namespace BMAPI
                             if ((Info.Format >= 5) && (Info.Format <= 12))
                             {
                                 ColourInfo o = (ColourInfo)f1.GetValue(this);
-                                if (o.startTime != null)
-                                    Save("Colours", "SliderBorder: " + o.r + "," + o.g + "," + o.b);
+                                Save("Colours", "SliderBorder: " + o.r + "," + o.g + "," + o.b);
                             }
                             break;
                         case "HitObjects":
                             switch (Info.Format)
                             {
                                 case 3: case 4:
-                                    foreach (dynamic obj in (IEnumerable<dynamic>)f1.GetValue(this))
+                                    foreach (BaseCircle obj in (IEnumerable<BaseCircle>)f1.GetValue(this))
                                     {
                                         int combo = 5;
                                         if (obj.newCombo == false)
                                             combo = 1;
-                                        if (obj.GetType() == typeof(CircleInfo))
+                                        if (obj.GetType() == typeof(BaseCircle))
                                         {
                                             Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + combo + "," + (int)obj.effect + ",");
                                         }
                                         else if (obj.GetType() == typeof(SliderInfo))
                                         {
-                                            string pointString = "";
-                                            foreach (PointInfo p in obj.points)
-                                                pointString += "|" + p.x + ":" + p.y;
-                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + (combo + 1) + "," + (int)obj.effect + "," + obj.type.ToString().Substring(0, 1) + pointString + "," + obj.repeatCount + "," + obj.maxPoints + ",");
+                                            SliderInfo sliderInfo = (SliderInfo)obj;
+                                            string pointString = sliderInfo.points.Aggregate("", (current, p) => current + ("|" + p.x + ":" + p.y));
+                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + (combo + 1) + "," + (int)obj.effect + "," + sliderInfo.type.ToString().Substring(0, 1) + pointString + "," + sliderInfo.repeatCount + "," + sliderInfo.maxPoints + ",");
                                         }
                                         else if (obj.GetType() == typeof(SpinnerInfo))
                                         {
-                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + ",12," + (int)obj.effect + "," + obj.endTime + ",");
+                                            SpinnerInfo spinnerInfo = (SpinnerInfo)obj;
+                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + ",12," + (int)obj.effect + "," + spinnerInfo.endTime + ",");
                                         }
                                     }
                                     break;
                                 case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12:
-                                    foreach (dynamic obj in (IEnumerable<dynamic>)f1.GetValue(this))
+                                    foreach (BaseCircle obj in (IEnumerable<BaseCircle>)f1.GetValue(this))
                                     {
                                         int combo = 5;
                                         if (obj.newCombo == false)
                                             combo = 1;
-                                        if (obj.GetType() == typeof(CircleInfo))
+                                        if (obj.GetType() == typeof(BaseCircle))
                                         {
                                             Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + combo + "," + (int)obj.effect);
                                         }
                                         else if (obj.GetType() == typeof(SliderInfo))
                                         {
-                                            string pointString = "";
-                                            foreach (PointInfo p in obj.points)
-                                                pointString += "|" + p.x + ":" + p.y;
-                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + (combo + 1) + "," + (int)obj.effect + "," + obj.type.ToString().Substring(0, 1) + pointString + "," + obj.repeatCount + "," + obj.maxPoints);
+                                            SliderInfo sliderInfo = (SliderInfo)obj;
+                                            string pointString = sliderInfo.points.Aggregate("", (current, p) => current + ("|" + p.x + ":" + p.y));
+                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + "," + (combo + 1) + "," + (int)obj.effect + "," + sliderInfo.type.ToString().Substring(0, 1) + pointString + "," + sliderInfo.repeatCount + "," + sliderInfo.maxPoints);
                                         }
                                         else if (obj.GetType() == typeof(SpinnerInfo))
                                         {
-                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + ",12," + (int)obj.effect + "," + obj.endTime);
+                                            SpinnerInfo spinnerInfo = (SpinnerInfo)obj;
+                                            Save("HitObjects", obj.location.x + "," + obj.location.y + "," + obj.startTime + ",12," + (int)obj.effect + "," + spinnerInfo.endTime);
                                         }
                                     }
                                     break;

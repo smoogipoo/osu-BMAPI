@@ -1,9 +1,7 @@
-﻿
-namespace BMAPI
+﻿namespace BMAPI
 {
-    public class BreakInfo
+    public class BreakInfo : BaseEvent
     {
-        public int startTime = 0;
-        public int endTime = 0;
+        public int endTime { get; set; }
     }
 }

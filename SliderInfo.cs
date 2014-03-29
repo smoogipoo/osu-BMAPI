@@ -2,15 +2,15 @@
 
 namespace BMAPI
 {
-    public class SliderInfo
+    public class SliderInfo : BaseCircle
     {
-        public PointInfo location = new PointInfo();
-        public int startTime = 0;
-        public bool newCombo = true;
-        public EffectType effect = EffectType.None;
-        public SliderType type = SliderType.Linear;
-        public List<object> points = new List<object>();
-        public int repeatCount = 0;
-        public double maxPoints = 0;
+        public SliderInfo()
+        {
+            type = SliderType.Linear;
+        }
+        public SliderType type { get; set; }
+        public List<PointInfo> points = new List<PointInfo>();
+        public int repeatCount { get; set; }
+        public double maxPoints { get; set; }
     }
 }

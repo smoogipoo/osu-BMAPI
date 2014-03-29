@@ -52,15 +52,15 @@ namespace BMAPI
         public int? BeatmapSetID = null;
 
         //Difficulty
-        public int? HPDrainRate = null;
-        public int? CircleSize = null;
-        public int? OverallDifficulty = null;
-        public int? ApproachRate = null;
+        public int HPDrainRate = 3;
+        public int CircleSize = 3;
+        public int OverallDifficulty = 3;
+        public int ApproachRate = 4;
         public double? SliderMultiplier = null;
         public double? SliderTickRate = null;
 
         //Events
-        public List<dynamic> Events = new List<dynamic>();
+        public List<BaseEvent> Events = new List<BaseEvent>();
 
         //Timingpoints
         public List<TimingPointInfo> TimingPoints = new List<TimingPointInfo>();
@@ -70,6 +70,6 @@ namespace BMAPI
         public ColourInfo SliderBorder = new ColourInfo();
 
         //Hitobjects
-        public List<dynamic> HitObjects = new List<dynamic>();
+        public List<BaseCircle> HitObjects = new List<BaseCircle>();
     }
 }

@@ -1,9 +1,7 @@
-﻿
-namespace BMAPI
+﻿namespace BMAPI
 {
-    public class VideoInfo
+    public class VideoInfo : BaseEvent
     {
-        public int startTime = 0;
-        public string filename = "";
+        public string filename { get; set; }
     }
 }

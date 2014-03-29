@@ -1,9 +1,7 @@
-﻿
-namespace BMAPI
+﻿namespace BMAPI
 {
-    public class BackgroundInfo
+    public class BackgroundInfo : BaseEvent
     {
-        public int startTime = 0;
-        public string filename;
+        public string filename { get; set; }
     }
 }

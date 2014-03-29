@@ -1,12 +1,7 @@
-﻿
-namespace BMAPI
+﻿namespace BMAPI
 {
-    public class SpinnerInfo
+    public class SpinnerInfo : BaseCircle
     {
-        public PointInfo location = new PointInfo();
-        public int startTime = 0;
-        public bool newCombo = true;
-        public EffectType effect = EffectType.None;
-        public int endTime = 0;
+        public int endTime { get; set; }
     }
 }

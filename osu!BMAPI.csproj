@@ -45,10 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundInfo.cs" />
+    <Compile Include="BaseEvent.cs" />
+    <Compile Include="BaseCircle.cs" />
     <Compile Include="BeatmapInfo.cs" />
     <Compile Include="BMAPI.cs" />
     <Compile Include="BreakInfo.cs" />
-    <Compile Include="CircleInfo.cs" />
     <Compile Include="ColourInfo.cs" />
     <Compile Include="ComboInfo.cs" />
     <Compile Include="Enums.cs" />
