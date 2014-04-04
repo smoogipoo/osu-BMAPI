@@ -13,10 +13,10 @@ namespace BMAPI
 {
     public class Beatmap : BeatmapInfo
     {
-        private readonly BeatmapInfo Info = new BeatmapInfo();
-        private readonly Dictionary<string, string> BM_Sections = new Dictionary<string, string>();
-        private readonly List<string> WriteBuffer = new List<string>();
-        private readonly Dictionary<string, int> SectionLength = new Dictionary<string, int>();
+        internal readonly BeatmapInfo Info = new BeatmapInfo();
+        internal readonly Dictionary<string, string> BM_Sections = new Dictionary<string, string>();
+        internal readonly List<string> WriteBuffer = new List<string>();
+        internal readonly Dictionary<string, int> SectionLength = new Dictionary<string, int>();
 
         public Beatmap(string beatmapFile = "")
         {
@@ -351,6 +351,7 @@ namespace BMAPI
                                 {
                                     //Circle
                                     BaseCircle tempCircle = new BaseCircle();
+                                    tempCircle.radius = 80 - 8 * Info.OverallDifficulty;
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -397,6 +398,7 @@ namespace BMAPI
                                 {
                                     //Slider
                                     SliderInfo tempSlider = new SliderInfo();
+                                    tempSlider.radius = 80 - 8 * Info.OverallDifficulty;
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -447,9 +449,7 @@ namespace BMAPI
                                     string[] pts = line.SubString(line.nthDexOf(",", 4) + 1, line.nthDexOf(",", 5)).Split(new[] { "|" }, StringSplitOptions.None);
                                     for (int i = 1; i <= pts.Length - 1; i++)
                                     {
-                                        PointInfo p = new PointInfo();
-                                        p.x = Convert.ToInt32(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.Ordinal)));
-                                        p.y = Convert.ToInt32(pts[i].Substring(pts[i].IndexOf(":", StringComparison.Ordinal) + 1));
+                                        PointInfo p = new PointInfo(Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.Ordinal))), Convert.ToDouble(pts[i].Substring(pts[i].IndexOf(":", StringComparison.Ordinal) + 1)));
                                         tempSlider.points.Add(p);
                                     }
                                     tempSlider.repeatCount = Convert.ToInt32(line.SubString(line.nthDexOf(",", 5) + 1, line.nthDexOf(",", 6)));
@@ -513,6 +513,7 @@ namespace BMAPI
                                 {
                                     //Circle
                                     BaseCircle tempCircle = new BaseCircle();
+                                    tempCircle.radius = 80 - 8 * Info.OverallDifficulty;
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -559,6 +560,7 @@ namespace BMAPI
                                 {
                                     //Slider
                                     SliderInfo tempSlider = new SliderInfo();
+                                    tempSlider.radius = 80 - 8 * Info.OverallDifficulty;
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -609,9 +611,7 @@ namespace BMAPI
                                     string[] pts = line.SubString(line.nthDexOf(",", 4) + 1, line.nthDexOf(",", 5)).Split(new[] { "|" }, StringSplitOptions.None);
                                     for (int i = 1; i <= pts.Length - 1; i++)
                                     {
-                                        PointInfo p = new PointInfo();
-                                        p.x = Convert.ToInt32(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.Ordinal)));
-                                        p.y = Convert.ToInt32(pts[i].Substring(pts[i].IndexOf(":", StringComparison.Ordinal) + 1));
+                                        PointInfo p = new PointInfo(Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.Ordinal))), Convert.ToDouble(pts[i].Substring(pts[i].IndexOf(":", StringComparison.Ordinal) + 1)));
                                         tempSlider.points.Add(p);
                                     }
                                     tempSlider.repeatCount = Convert.ToInt32(line.SubString(line.nthDexOf(",", 5) + 1, line.nthDexOf(",", 6)));
