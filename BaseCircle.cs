@@ -9,14 +9,14 @@ namespace BMAPI
             newCombo = true;
         }
         public PointInfo location = new PointInfo(0, 0);
-        public int radius = 128;
+        public double radius = 80;
         public int startTime { get; set; }
         public bool newCombo { get; set; }
         public EffectType effect { get; set; }
 
         public bool ContainsPoint(PointInfo Point)
         {
-            return Math.Pow(Point.x - location.x, 2) + Math.Pow(Point.y - location.y, 2) < radius;
+            return Math.Sqrt(Math.Pow(Point.x - location.x, 2) + Math.Pow(Point.y - location.y, 2)) <= radius;
         }
     }
 }

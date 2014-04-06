@@ -351,7 +351,7 @@ namespace BMAPI
                                 {
                                     //Circle
                                     BaseCircle tempCircle = new BaseCircle();
-                                    tempCircle.radius = 80 - 8 * Info.OverallDifficulty;
+                                    tempCircle.radius = 40 - 4 * (Info.CircleSize - 2);
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -398,7 +398,7 @@ namespace BMAPI
                                 {
                                     //Slider
                                     SliderInfo tempSlider = new SliderInfo();
-                                    tempSlider.radius = 80 - 8 * Info.OverallDifficulty;
+                                    tempSlider.radius = 40 - 4 * (Info.CircleSize - 2);
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -513,7 +513,7 @@ namespace BMAPI
                                 {
                                     //Circle
                                     BaseCircle tempCircle = new BaseCircle();
-                                    tempCircle.radius = 80 - 8 * Info.OverallDifficulty;
+                                    tempCircle.radius = 40 - 4 * (Info.CircleSize - 2);
                                     tempCircle.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempCircle.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempCircle.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
@@ -560,7 +560,7 @@ namespace BMAPI
                                 {
                                     //Slider
                                     SliderInfo tempSlider = new SliderInfo();
-                                    tempSlider.radius = 80 - 8 * Info.OverallDifficulty;
+                                    tempSlider.radius = 40 - 4 * (Info.CircleSize - 2);
                                     tempSlider.location.x = Convert.ToInt32(line.SubString(0, line.nthDexOf(",", 0)));
                                     tempSlider.location.y = Convert.ToInt32(line.SubString(line.nthDexOf(",", 0) + 1, line.nthDexOf(",", 1)));
                                     tempSlider.startTime = Convert.ToInt32(line.SubString(line.nthDexOf(",", 1) + 1, line.nthDexOf(",", 2)));
