@@ -2,6 +2,6 @@
 {
     public class BackgroundInfo : BaseEvent
     {
-        public string filename { get; set; }
+        public string Filename { get; set; }
     }
 }

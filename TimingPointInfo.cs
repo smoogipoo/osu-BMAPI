@@ -3,14 +3,14 @@ namespace BMAPI
 {
     public class TimingPointInfo
     {
-        public double time = 0.0f;
-        public double bpmDelay = 0.0f;
-        public int timeSignature = 4;
-        public int sampleSet = 0;
-        public int customSampleSet = 0;
-        public int volumePercentage = 100;
-        public bool inheritsBPM = false;
-        public bool kiaiTime = false;
-        public bool omitFirstBarLine = false;
+        public double Time { get; set; }
+        public double BpmDelay { get; set; }
+        public int TimeSignature = 4;
+        public int SampleSet = 0;
+        public int CustomSampleSet = 0;
+        public int VolumePercentage = 100;
+        public bool InheritsBPM = false;
+        public bool KiaiTime = false;
+        public bool OmitFirstBarLine = false;
     }
 }

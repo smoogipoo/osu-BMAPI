@@ -2,8 +2,8 @@
 {
     public class ComboInfo
     {
-        public int comboNumber = 0;
-        public ColourInfo colour = new ColourInfo();
+        public int ComboNumber = 0;
+        public ColourInfo Colour = new ColourInfo();
 
     }
 }

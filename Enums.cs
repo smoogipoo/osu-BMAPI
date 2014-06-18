@@ -27,8 +27,8 @@ namespace BMAPI
     public enum SliderType
     {
         Linear = 0,
-        Cumulative = 1,
+        PSpline = 1,
         Bezier = 2,
-        PassThrough = 3,
+        CSpline = 3,
     }
 }

@@ -2,6 +2,6 @@
 {
     public class BaseEvent
     {
-        public int startTime { get; set; }
+        public int StartTime { get; set; }
     }
 }

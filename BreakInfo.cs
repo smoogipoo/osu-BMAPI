@@ -2,6 +2,6 @@
 {
     public class BreakInfo : BaseEvent
     {
-        public int endTime { get; set; }
+        public int EndTime { get; set; }
     }
 }
