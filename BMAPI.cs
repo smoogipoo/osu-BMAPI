@@ -17,6 +17,10 @@ namespace BMAPI
         internal readonly List<string> WriteBuffer = new List<string>();
         internal readonly Dictionary<string, int> SectionLength = new Dictionary<string, int>();
 
+        /// <summary>
+        /// Creates a new Beatmap object
+        /// </summary>
+        /// <param name="beatmapFile">The beatmap file to open</param>
         public Beatmap(string beatmapFile = "")
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
@@ -135,11 +139,11 @@ namespace BMAPI
                                     break;
                                 }
                                 if ((pi.PropertyType == typeof(double?)) || (pi.PropertyType == typeof(double)))
-                                    pi.SetValue(Info, Convert.ToDouble(cValue));
+                                    pi.SetValue(Info, Convert.ToDouble(cValue), null);
                                 else if ((pi.PropertyType == typeof(int?)) || (pi.PropertyType == typeof(int)))
-                                    pi.SetValue(Info, Convert.ToInt32(cValue));
+                                    pi.SetValue(Info, Convert.ToInt32(cValue), null);
                                 else if (pi.PropertyType == typeof(string))
-                                    pi.SetValue(Info, cValue);
+                                    pi.SetValue(Info, cValue, null);
                                 break;
                             }
                         }
@@ -147,7 +151,6 @@ namespace BMAPI
                     }
 
                     //The following are version-dependent, the version is stored as a numeric value inside Info.Format
-
                     //Do work for [Events] section
                     if (currentSection == "[Events]")
                     {
@@ -498,6 +501,10 @@ namespace BMAPI
             }
         }
 
+        /// <summary>
+        /// Saves the beatmap
+        /// </summary>
+        /// <param name="filename">The file to save the beatmap as</param>
         public void Save(string filename)
         {
             CultureInfo lastCulture = Thread.CurrentThread.CurrentCulture;

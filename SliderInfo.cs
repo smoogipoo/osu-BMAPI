@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -163,7 +162,7 @@ namespace BMAPI
 
     public class Spline : List<SplineFunction>
     {
-        public Spline(IReadOnlyList<PointInfo> Points)
+        public Spline(IList<PointInfo> Points)
         {
             List<double> Times = new List<double>();
             for (double i = 0; i <= 1; i += 1d / (Points.Count - 1))
