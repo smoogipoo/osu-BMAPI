@@ -109,11 +109,9 @@ namespace BMAPI
                             }
                                 break;
                             case "Tags":
-                            {
                                 string[] tags = cValue.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (string t in tags)
                                     Info.Tags.Add(t);
-                            }
                                 break;
                             case "Mode":
                                 Info.Mode = (GameMode)Enum.Parse(typeof(GameMode), cValue);
@@ -125,7 +123,6 @@ namespace BMAPI
                                 Info.AlwaysShowPlayfield = Convert.ToBoolean(Convert.ToInt32(cValue));
                                 break;
                             default:
-                            {
                                 FieldInfo fi = Info.GetType().GetField(cProperty);
                                 PropertyInfo pi = Info.GetType().GetProperty(cProperty);
                                 if (fi != null)
@@ -145,7 +142,6 @@ namespace BMAPI
                                 else if (pi.PropertyType == typeof(string))
                                     pi.SetValue(Info, cValue, null);
                                 break;
-                            }
                         }
                         continue;
                     }
@@ -499,6 +495,11 @@ namespace BMAPI
             {
                 FieldInfo ff = GetType().GetField(fi.Name);
                 ff.SetValue(this, fi.GetValue(Info));
+            }
+            foreach (PropertyInfo pi in Info.GetType().GetProperties())
+            {
+                PropertyInfo ff = GetType().GetProperty(pi.Name);
+                ff.SetValue(this, pi.GetValue(Info, null), null);
             }
         }
 
