@@ -690,6 +690,29 @@ namespace BMAPI
                     }
                 }
             }
+            foreach (PropertyInfo f1 in GetType().GetProperties())
+            {
+                foreach (PropertyInfo f2 in Info.GetType().GetProperties().Where(f2 => f1.Name == f2.Name))
+                {
+                    if (f1.GetValue(this, null) != null)
+                    {
+                        if (f2.GetValue(Info, null) != null)
+                        {
+                            if ((f1.GetValue(this, null).GetType() == typeof(GameMode)) || (f1.GetValue(this, null).GetType() == typeof(OverlayOptions)))
+                                Save(GetSection(f1.Name), f1.Name + ':' + (int)f1.GetValue(this, null));
+                            else
+                                Save(GetSection(f1.Name), f1.Name + ':' + f1.GetValue(this, null));
+                        }
+                        else
+                        {
+                            if ((f2.GetValue(Info, null).GetType() == typeof(GameMode)) || (f2.GetValue(Info, null).GetType() == typeof(OverlayOptions)))
+                                Save(GetSection(f2.Name), f2.Name + ':' + (int)f2.GetValue(Info, null));
+                            else
+                                Save(GetSection(f2.Name), f2.Name + ':' + f2.GetValue(Info, null));
+                        }
+                    }
+                }
+            }
             FinishSave(filename);
             Thread.CurrentThread.CurrentCulture = lastCulture;
         }
