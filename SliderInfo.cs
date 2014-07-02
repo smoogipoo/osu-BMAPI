@@ -10,6 +10,11 @@ namespace BMAPI
         {
             Type = SliderType.Linear;
         }
+        public SliderInfo(BaseCircle baseInstance) : base(baseInstance)
+        {
+            Type = SliderType.Linear;
+        }
+
         public SliderType Type { get; set; }
         public List<PointInfo> Points = new List<PointInfo>();
         public int RepeatCount { get; set; }

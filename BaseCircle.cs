@@ -6,12 +6,21 @@ namespace BMAPI
         public BaseCircle()
         {
             Effect = EffectType.None;
-            NewCombo = true;
         }
+        public BaseCircle(BaseCircle baseInstance)
+        {
+            //Copy from baseInstance
+            Location = baseInstance.Location;
+            Radius = baseInstance.Radius;
+            StartTime = baseInstance.StartTime;
+            Type = baseInstance.Type;
+            Effect = baseInstance.Effect;
+        }
+
         public PointInfo Location = new PointInfo(0, 0);
         public double Radius = 80;
         public int StartTime { get; set; }
-        public bool NewCombo { get; set; }
+        public HitObjectType Type { get; set; }
         public EffectType Effect { get; set; }
 
         public virtual bool ContainsPoint(PointInfo Point)

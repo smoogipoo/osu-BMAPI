@@ -83,7 +83,7 @@ namespace BMAPI
 
         //Colours
         public List<ComboInfo> ComboColours = new List<ComboInfo>();
-        public ColourInfo SliderBorder = new ColourInfo();
+        public ColourInfo SliderBorder = new ColourInfo { R = 255, G = 255, B = 255 };
 
         //Hitobjects
         public List<BaseCircle> HitObjects = new List<BaseCircle>();

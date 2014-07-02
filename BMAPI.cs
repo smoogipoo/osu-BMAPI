@@ -114,10 +114,10 @@ namespace BMAPI
                                     Info.Tags.Add(t);
                                 break;
                             case "Mode":
-                                Info.Mode = (GameMode)Enum.Parse(typeof(GameMode), cValue);
+                                Info.Mode = (GameMode)Convert.ToInt32(cValue);
                                 break;
                             case "OverlayPosition":
-                                Info.OverlayPosition = (OverlayOptions)Enum.Parse(typeof(OverlayOptions), cValue);
+                                Info.OverlayPosition = (OverlayOptions)Convert.ToInt32(cValue);
                                 break;
                             case "AlwaysShowPlayfield":
                                 Info.AlwaysShowPlayfield = Convert.ToBoolean(Convert.ToInt32(cValue));
@@ -193,107 +193,22 @@ namespace BMAPI
                     if (currentSection == "[TimingPoints]")
                     {
                         TimingPointInfo tempTimingPoint = new TimingPointInfo();
-                        string[] reSplit = line.Split(',');
-                        switch (Info.Format)
-                        {
-                            case 3:
-                                tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                Info.TimingPoints.Add(tempTimingPoint);
-                                break;
-                            case 4:
-                                switch (reSplit.Length)
-                                {
-                                    case 4:
-                                        tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                        tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                        tempTimingPoint.TimeSignature = Convert.ToInt32(reSplit[2]);
-                                        tempTimingPoint.SampleSet = Convert.ToInt32(reSplit[3]);
-                                        tempTimingPoint.CustomSampleSet = Convert.ToInt32(reSplit[4]);
-                                        Info.TimingPoints.Add(tempTimingPoint);
-                                        break;
-                                    case 5:
-                                        tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                        tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                        tempTimingPoint.TimeSignature = Convert.ToInt32(reSplit[2]);
-                                        tempTimingPoint.SampleSet = Convert.ToInt32(reSplit[3]);
-                                        tempTimingPoint.CustomSampleSet = Convert.ToInt32(reSplit[4]);
-                                        Info.TimingPoints.Add(tempTimingPoint);
-                                        break;
-                                }
 
-                                break;
-                            case 5:
-                                switch (reSplit.Length)
-                                {
-                                    case 6:
-                                        tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                        tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                        tempTimingPoint.TimeSignature = Convert.ToInt32(reSplit[2]);
-                                        tempTimingPoint.SampleSet = Convert.ToInt32(reSplit[3]);
-                                        tempTimingPoint.CustomSampleSet = Convert.ToInt32(reSplit[4]);
-                                        tempTimingPoint.VolumePercentage = Convert.ToInt32(reSplit[5]);
-                                        Info.TimingPoints.Add(tempTimingPoint);
-                                        break;
-                                    case 7:
-                                        tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                        tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                        tempTimingPoint.TimeSignature = Convert.ToInt32(reSplit[2]);
-                                        tempTimingPoint.SampleSet = Convert.ToInt32(reSplit[3]);
-                                        tempTimingPoint.CustomSampleSet = Convert.ToInt32(reSplit[4]);
-                                        tempTimingPoint.VolumePercentage = Convert.ToInt32(reSplit[5]);
-                                        tempTimingPoint.InheritsBPM = !Convert.ToBoolean(Convert.ToInt32(reSplit[6]));
-                                        Info.TimingPoints.Add(tempTimingPoint);
-                                        break;
-                                    case 8:
-                                        tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                        tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                        tempTimingPoint.TimeSignature = Convert.ToInt32(reSplit[2]);
-                                        tempTimingPoint.SampleSet = Convert.ToInt32(reSplit[3]);
-                                        tempTimingPoint.CustomSampleSet = Convert.ToInt32(reSplit[4]);
-                                        tempTimingPoint.VolumePercentage = Convert.ToInt32(reSplit[5]);
-                                        tempTimingPoint.InheritsBPM = !Convert.ToBoolean(Convert.ToInt32(reSplit[6]));
-                                        switch (reSplit[7])
-                                        {
-                                            case "1":
-                                                tempTimingPoint.KiaiTime = true;
-                                                break;
-                                            case "8":
-                                                tempTimingPoint.OmitFirstBarLine = true;
-                                                break;
-                                            case "9":
-                                                tempTimingPoint.KiaiTime = true;
-                                                tempTimingPoint.OmitFirstBarLine = true;
-                                                break;
-                                        }
-                                        Info.TimingPoints.Add(tempTimingPoint);
-                                        break;
-                                }
-                                break;
-                            case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13:
-                                tempTimingPoint.Time = Convert.ToDouble(reSplit[0]);
-                                tempTimingPoint.BpmDelay = Convert.ToDouble(reSplit[1]);
-                                tempTimingPoint.TimeSignature = Convert.ToInt32(reSplit[2]);
-                                tempTimingPoint.SampleSet = Convert.ToInt32(reSplit[3]);
-                                tempTimingPoint.CustomSampleSet = Convert.ToInt32(reSplit[4]);
-                                tempTimingPoint.VolumePercentage = Convert.ToInt32(reSplit[5]);
-                                tempTimingPoint.InheritsBPM = !Convert.ToBoolean(Convert.ToInt32(reSplit[6]));
-                                switch (reSplit[7])
-                                {
-                                    case "1":
-                                        tempTimingPoint.KiaiTime = true;
-                                        break;
-                                    case "8":
-                                        tempTimingPoint.OmitFirstBarLine = true;
-                                        break;
-                                    case "9":
-                                        tempTimingPoint.KiaiTime = true;
-                                        tempTimingPoint.OmitFirstBarLine = true;
-                                        break;
-                                }
-                                Info.TimingPoints.Add(tempTimingPoint);
-                                break;
+                        double[] values = { 0, 0, 4, 0, 0, 100, 0, 0, 0 };
+                        string[] reSplit = line.Split(',');
+                        for (int i = 0; i < reSplit.Length; i++)
+                        {
+                            values[i] += Convert.ToDouble(reSplit[i]);
                         }
+                        tempTimingPoint.Time = Convert.ToDouble(values[0]);
+                        tempTimingPoint.BpmDelay = Convert.ToDouble(values[1]);
+                        tempTimingPoint.TimeSignature = Convert.ToInt32(values[2]);
+                        tempTimingPoint.SampleSet = Convert.ToInt32(values[3]);
+                        tempTimingPoint.CustomSampleSet = Convert.ToInt32(values[4]);
+                        tempTimingPoint.VolumePercentage = Convert.ToInt32(values[5]);
+                        tempTimingPoint.InheritsBPM = !Convert.ToBoolean(Convert.ToInt32(values[6]));
+                        tempTimingPoint.VisualOptions = (TimingPointOptions)Convert.ToInt32(values[7]);
+                        Info.TimingPoints.Add(tempTimingPoint);
                     }
 
                     //Do work for [Colours] section
@@ -330,164 +245,54 @@ namespace BMAPI
                     if (currentSection == "[HitObjects]")
                     {
                         string[] reSplit = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        switch (Info.Format)
+                        BaseCircle newObject = new BaseCircle
                         {
-                            case 3: case 4:
-                                if (reSplit.Length == 5)
-                                {
-                                    //Circle
-                                    BaseCircle tempCircle = new BaseCircle();
-                                    tempCircle.Radius = 40 - 4 * (Info.CircleSize - 2);
-                                    tempCircle.Location.X = Convert.ToInt32(reSplit[0]);
-                                    tempCircle.Location.Y = Convert.ToInt32(reSplit[1]);
-                                    tempCircle.StartTime = Convert.ToInt32(reSplit[2]);
-                                    int tempNewCombo = Convert.ToInt32(reSplit[3]);
-                                    if (tempNewCombo == 1)
-                                    {
-                                        tempCircle.NewCombo = false;
-                                    }
-                                    else
-                                    {
-                                        tempCircle.NewCombo = (tempNewCombo + 1) % 2 == 0;
-                                    }
-                                    tempCircle.Effect = (EffectType)Enum.Parse(typeof(EffectType), reSplit[4]);
-                                    Info.HitObjects.Add(tempCircle);
-                                }
-                                else if (reSplit[5].Substring(0, 1) == "B" || reSplit[5].Substring(0, 1) == "C" || reSplit[5].Substring(0, 1) == "L" || reSplit[5].Substring(0, 1) == "P")
-                                {
-                                    //Slider
-                                    SliderInfo tempSlider = new SliderInfo();
-                                    tempSlider.Velocity = Info.SliderMultiplier;
-                                    tempSlider.Radius = 40 - 4 * (Info.CircleSize - 2);
-                                    tempSlider.Location.X = Convert.ToInt32(reSplit[0]);
-                                    tempSlider.Location.Y = Convert.ToInt32(reSplit[1]);
-                                    tempSlider.StartTime = Convert.ToInt32(reSplit[2]);
-                                    int tempNewCombo = Convert.ToInt32(reSplit[3]);
-                                    tempSlider.NewCombo = tempNewCombo != 2 && tempNewCombo % 2 == 0;
-                                    tempSlider.Effect = (EffectType)Enum.Parse(typeof(EffectType), reSplit[4]);
-                                    switch (reSplit[5].Substring(0, 1))
-                                    {
-                                        case "B":
-                                            tempSlider.Type = SliderType.Bezier;
-                                            break;
-                                        case "C":
-                                            tempSlider.Type = SliderType.CSpline;
-                                            break;
-                                        case "L":
-                                            tempSlider.Type = SliderType.Linear;
-                                            break;
-                                        case "P":
-                                            tempSlider.Type = SliderType.PSpline;
-                                            break;
-                                    }
-                                    string[] pts = reSplit[5].Split(new[] { "|" }, StringSplitOptions.None);
-                                    for (int i = 1; i <= pts.Length - 1; i++)
-                                    {
-                                        PointInfo p = new PointInfo(Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.Ordinal))), Convert.ToDouble(pts[i].Substring(pts[i].IndexOf(":", StringComparison.Ordinal) + 1)));
-                                        tempSlider.Points.Add(p);
-                                    }
-                                    tempSlider.RepeatCount = Convert.ToInt32(reSplit[6]);
-                                    double tempDbl;
-                                    if (double.TryParse(reSplit[7], out tempDbl))
-                                    {
-                                        tempSlider.MaxPoints = tempDbl;
-                                    }
-                                    Info.HitObjects.Add(tempSlider);
-                                }
-                                else
-                                {
-                                    //Spinner
-                                    SpinnerInfo tempSpinner = new SpinnerInfo();
-                                    tempSpinner.Location.X = Convert.ToInt32(reSplit[0]);
-                                    tempSpinner.Location.Y = Convert.ToInt32(reSplit[1]);
-                                    tempSpinner.StartTime = Convert.ToInt32(reSplit[2]);
-                                    tempSpinner.Effect = (EffectType)Enum.Parse(typeof(EffectType), reSplit[4]);
-                                    tempSpinner.EndTime = Convert.ToInt32(reSplit[5]);
-                                    Info.HitObjects.Add(tempSpinner);
-                                }
-                                break;
-                            //Note: Until I figure out how to represent the last few bytes, I will ignore them
-                            case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13:
-                                int circleCount = 5;
-                                if (reSplit[reSplit.Length - 1].Contains(':'))
-                                    circleCount = 6;
-                                if (reSplit.Length == circleCount)
-                                {
-                                    //Circle
-                                    BaseCircle tempCircle = new BaseCircle();
-                                    tempCircle.Radius = 40 - 4 * (Info.CircleSize - 2);
-                                    tempCircle.Location.X = Convert.ToInt32(reSplit[0]);
-                                    tempCircle.Location.Y = Convert.ToInt32(reSplit[1]);
-                                    tempCircle.StartTime = Convert.ToInt32(reSplit[2]);
-                                    int tempNewCombo = Convert.ToInt32(reSplit[3]);
-                                    if (tempNewCombo == 1)
-                                    {
-                                        tempCircle.NewCombo = false;
-                                    }
-                                    else
-                                    {
-                                        tempCircle.NewCombo = (tempNewCombo + 1) % 2 == 0;
-                                    }
-
-                                    tempCircle.Effect = (EffectType)Enum.Parse(typeof(EffectType), reSplit[4]);
-                                    Info.HitObjects.Add(tempCircle);
-                                }
-                                else if ((reSplit[5].Substring(0, 1) == "B") || (reSplit[5].Substring(0, 1) == "C") || (reSplit[5].Substring(0, 1) == "L") || (reSplit[5].Substring(0, 1) == "P"))
-                                {
-                                    //Slider
-                                    SliderInfo tempSlider = new SliderInfo();
-                                    tempSlider.Velocity = Info.SliderMultiplier;
-                                    tempSlider.Radius = 40 - 4 * (Info.CircleSize - 2);
-                                    tempSlider.Location.X = Convert.ToInt32(reSplit[0]);
-                                    tempSlider.Location.Y = Convert.ToInt32(reSplit[1]);
-                                    tempSlider.StartTime = Convert.ToInt32(reSplit[2]);
-                                    int tempNewCombo = Convert.ToInt32(reSplit[3]);
-                                    tempSlider.NewCombo = tempNewCombo != 2 && tempNewCombo % 2 == 0;
-                                    tempSlider.Effect = (EffectType)Enum.Parse(typeof(EffectType), reSplit[4]);
-                                    switch (reSplit[5].Substring(0, 1))
-                                    {
-                                        case "B":
-                                            tempSlider.Type = SliderType.Bezier;
-                                            break;
-                                        case "C":
-                                            tempSlider.Type = SliderType.CSpline;
-                                            break;
-                                        case "L":
-                                            tempSlider.Type = SliderType.Linear;
-                                            break;
-                                        case "P":
-                                            tempSlider.Type = SliderType.PSpline;
-                                            break;
-                                    }
-                                    string[] pts = reSplit[5].Split(new[] { "|" }, StringSplitOptions.None);
-                                    tempSlider.Points.Add(tempSlider.Location);
-                                    for (int i = 1; i <= pts.Length - 1; i++)
-                                    {
-                                        PointInfo p = new PointInfo(Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.Ordinal))), Convert.ToDouble(pts[i].Substring(pts[i].IndexOf(":", StringComparison.Ordinal) + 1)));
-                                        tempSlider.Points.Add(p);
-                                    }
-                                    tempSlider.RepeatCount = Convert.ToInt32(reSplit[6]);
-                                    double tempDbl;
-                                    if (double.TryParse(reSplit[7], out tempDbl))
-                                    {
-                                        tempSlider.MaxPoints = tempDbl;
-                                    }
-                                    Info.HitObjects.Add(tempSlider);
-                                }
-                                else
-                                {
-                                    //Spinner
-                                    SpinnerInfo tempSpinner = new SpinnerInfo();
-                                    tempSpinner.Location.X = Convert.ToInt32(reSplit[0]);
-                                    tempSpinner.Location.Y = Convert.ToInt32(reSplit[1]);
-                                    tempSpinner.StartTime = Convert.ToInt32(reSplit[2]);
-                                    tempSpinner.Effect = (EffectType)Enum.Parse(typeof(EffectType), reSplit[4]);
-                                    tempSpinner.EndTime = Convert.ToInt32(reSplit[5]);
-                                    Info.HitObjects.Add(tempSpinner);
-                                }
-                                break;
+                            Radius = 40 - 4 * (Info.CircleSize - 2),
+                            Location = new PointInfo(Convert.ToInt32(reSplit[0]), Convert.ToInt32(reSplit[1])),
+                            StartTime = Convert.ToInt32(reSplit[2]),
+                            Type = (HitObjectType)Convert.ToInt32(reSplit[3]),
+                            Effect = (EffectType)Convert.ToInt32(reSplit[4])
+                        };
+                        if ((newObject.Type & HitObjectType.Slider) > 0)
+                        {
+                            newObject = new SliderInfo(newObject);
+                            ((SliderInfo)newObject).Velocity = Info.SliderMultiplier;
+                            switch (reSplit[5].Substring(0, 1))
+                            {
+                                case "B":
+                                    ((SliderInfo)newObject).Type = SliderType.Bezier;
+                                    break;
+                                case "C":
+                                    ((SliderInfo)newObject).Type = SliderType.CSpline;
+                                    break;
+                                case "L":
+                                    ((SliderInfo)newObject).Type = SliderType.Linear;
+                                    break;
+                                case "P":
+                                    ((SliderInfo)newObject).Type = SliderType.PSpline;
+                                    break;
+                            }
+                            string[] pts = reSplit[5].Split(new[] { "|" }, StringSplitOptions.None);
+                            //Always exclude index 1, this will contain
+                            for (int i = 1; i <= pts.Length - 1; i++)
+                            {
+                                PointInfo p = new PointInfo(Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.InvariantCulture))), 
+                                                            Convert.ToDouble(pts[i].Substring(pts[i].IndexOf(":", StringComparison.InvariantCulture) + 1)));
+                                ((SliderInfo)newObject).Points.Add(p);
+                            }
+                            ((SliderInfo)newObject).RepeatCount = Convert.ToInt32(reSplit[6]);
+                            double tempDbl;
+                            if (double.TryParse(reSplit[7], out tempDbl))
+                            {
+                                ((SliderInfo)newObject).MaxPoints = tempDbl;
+                            }
                         }
+                        if ((newObject.Type & HitObjectType.Spinner) > 0)
+                        {
+                            newObject = new SpinnerInfo(newObject);
+                            ((SpinnerInfo)newObject).EndTime = Convert.ToInt32(reSplit[5]);
+                        }
+                        Info.HitObjects.Add(newObject);
                     }
                 }
             }
@@ -511,7 +316,7 @@ namespace BMAPI
         {
             CultureInfo lastCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
-            Save("", "osu file format v" + Info.Format);
+            Save("", "osu file format v13");
             FieldInfo[] newFields = GetType().GetFields();
             FieldInfo[] oldFields = Info.GetType().GetFields();
 
@@ -549,120 +354,66 @@ namespace BMAPI
                             }
                             break;
                         case "Events":
-                            if ((Info.Format >= 3) && (Info.Format <= 13))
+                            foreach (BaseEvent o in (IEnumerable<BaseEvent>)f1.GetValue(this))
                             {
-                                foreach (BaseEvent o in (IEnumerable<BaseEvent>)f1.GetValue(this))
+                                if (o.GetType() == typeof(BackgroundInfo))
                                 {
-                                    if (o.GetType() == typeof(BackgroundInfo))
-                                    {
-                                        BackgroundInfo backgroundInfo = (BackgroundInfo)o;
-                                        Save("Events", "0," + o.StartTime + ",\"" + backgroundInfo.Filename + "\"");
-                                    }
-                                    else if (o.GetType() == typeof(VideoInfo))
-                                    {
-                                        VideoInfo videoInfo = (VideoInfo)o;
-                                        Save("Events", "1," + o.StartTime + ",\"" + videoInfo.Filename + "\"");
-                                    }
-                                    else if (o.GetType() == typeof(BreakInfo))
-                                    {
-                                        BreakInfo breakInfo = (BreakInfo)o;
-                                        Save("Events", "2," + o.StartTime + "," + breakInfo.EndTime);
-                                    }
-                                    else if (o.GetType() == typeof(ColourInfo))
-                                    {
-                                        ColourInfo colourInfo = (ColourInfo)o;
-                                        Save("Events", "3," + o.StartTime + "," + colourInfo.R + "," + colourInfo.G + "," + colourInfo.B);
-                                    }
+                                    BackgroundInfo backgroundInfo = (BackgroundInfo)o;
+                                    Save("Events", "0," + o.StartTime + ",\"" + backgroundInfo.Filename + "\"");
+                                }
+                                else if (o.GetType() == typeof(VideoInfo))
+                                {
+                                    VideoInfo videoInfo = (VideoInfo)o;
+                                    Save("Events", "1," + o.StartTime + ",\"" + videoInfo.Filename + "\"");
+                                }
+                                else if (o.GetType() == typeof(BreakInfo))
+                                {
+                                    BreakInfo breakInfo = (BreakInfo)o;
+                                    Save("Events", "2," + o.StartTime + "," + breakInfo.EndTime);
+                                }
+                                else if (o.GetType() == typeof(ColourInfo))
+                                {
+                                    ColourInfo colourInfo = (ColourInfo)o;
+                                    Save("Events", "3," + o.StartTime + "," + colourInfo.R + "," + colourInfo.G + "," + colourInfo.B);
                                 }
                             }
                             break;
                         case "TimingPoints":
-                            switch (Info.Format)
                             {
-                                case 3:
-                                    foreach (TimingPointInfo o in (IEnumerable<TimingPointInfo>)f1.GetValue(this))
-                                        Save("TimingPoints", o.Time + "," + o.BpmDelay);
-                                    break;
-                                case 4:
-                                    foreach (TimingPointInfo o in (IEnumerable<TimingPointInfo>)f1.GetValue(this))
-                                        Save("TimingPoints", o.Time + "," + o.BpmDelay + "," + o.TimeSignature + "," + o.SampleSet + "," + o.CustomSampleSet);
-                                    break;
-                                case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13:
-                                    foreach (TimingPointInfo o in (IEnumerable<TimingPointInfo>)f1.GetValue(this))
-                                    {
-                                        int options = 0;
-                                        if (o.KiaiTime)
-                                            options += 1;
-                                        if (o.OmitFirstBarLine)
-                                            options += 8;
-                                        Save("TimingPoints", o.Time + "," + o.BpmDelay + "," + o.TimeSignature + "," + o.SampleSet + "," + o.CustomSampleSet + "," + o.VolumePercentage + "," + Convert.ToInt32(!o.InheritsBPM) + "," + options);
-                                    }
-                                    break;
+                                foreach (TimingPointInfo o in (IEnumerable<TimingPointInfo>)f1.GetValue(this))
+                                    Save("TimingPoints", o.Time + "," + o.BpmDelay + "," + o.TimeSignature + "," + o.SampleSet + "," + o.CustomSampleSet + "," + o.VolumePercentage + "," + Convert.ToInt32(!o.InheritsBPM) + "," + (int)o.VisualOptions);
                             }
                             break;
                         case "ComboColours":
-                            if ((Info.Format >= 5) && (Info.Format <= 13))
                             {
                                 foreach (ComboInfo o in (IEnumerable<ComboInfo>)f1.GetValue(this))
                                     Save("Colours", "Combo" + o.ComboNumber + ':' + o.Colour.R + "," + o.Colour.G + "," + o.Colour.B);
                             }
                             break;
                         case "SliderBorder":
-                            if ((Info.Format >= 5) && (Info.Format <= 13))
                             {
                                 ColourInfo o = (ColourInfo)f1.GetValue(this);
                                 Save("Colours", "SliderBorder: " + o.R + "," + o.G + "," + o.B);
                             }
                             break;
                         case "HitObjects":
-                            switch (Info.Format)
+                            foreach (BaseCircle obj in (IEnumerable<BaseCircle>)f1.GetValue(this))
                             {
-                                case 3: case 4:
-                                    foreach (BaseCircle obj in (IEnumerable<BaseCircle>)f1.GetValue(this))
-                                    {
-                                        int combo = 5;
-                                        if (obj.NewCombo == false)
-                                            combo = 1;
-                                        if (obj.GetType() == typeof(BaseCircle))
-                                        {
-                                            Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + combo + "," + (int)obj.Effect + ",");
-                                        }
-                                        else if (obj.GetType() == typeof(SliderInfo))
-                                        {
-                                            SliderInfo sliderInfo = (SliderInfo)obj;
-                                            string pointString = sliderInfo.Points.Aggregate("", (current, p) => current + ("|" + p.X + ':' + p.Y));
-                                            Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (combo + 1) + "," + (int)obj.Effect + "," + sliderInfo.Type.ToString().Substring(0, 1) + pointString + "," + sliderInfo.RepeatCount + "," + sliderInfo.MaxPoints + ",");
-                                        }
-                                        else if (obj.GetType() == typeof(SpinnerInfo))
-                                        {
-                                            SpinnerInfo spinnerInfo = (SpinnerInfo)obj;
-                                            Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + ",12," + (int)obj.Effect + "," + spinnerInfo.EndTime + ",");
-                                        }
-                                    }
-                                    break;
-                                case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13:
-                                    foreach (BaseCircle obj in (IEnumerable<BaseCircle>)f1.GetValue(this))
-                                    {
-                                        int combo = 5;
-                                        if (obj.NewCombo == false)
-                                            combo = 1;
-                                        if (obj.GetType() == typeof(BaseCircle))
-                                        {
-                                            Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + combo + "," + (int)obj.Effect);
-                                        }
-                                        else if (obj.GetType() == typeof(SliderInfo))
-                                        {
-                                            SliderInfo sliderInfo = (SliderInfo)obj;
-                                            string pointString = sliderInfo.Points.Aggregate("", (current, p) => current + ("|" + p.X + ':' + p.Y));
-                                            Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (combo + 1) + "," + (int)obj.Effect + "," + sliderInfo.Type.ToString().Substring(0, 1) + pointString + "," + sliderInfo.RepeatCount + "," + sliderInfo.MaxPoints);
-                                        }
-                                        else if (obj.GetType() == typeof(SpinnerInfo))
-                                        {
-                                            SpinnerInfo spinnerInfo = (SpinnerInfo)obj;
-                                            Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + ",12," + (int)obj.Effect + "," + spinnerInfo.EndTime);
-                                        }
-                                    }
-                                    break;
+                                if (obj.GetType() == typeof(BaseCircle))
+                                {
+                                    Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (int)obj.Type + "," + (int)obj.Effect);
+                                }
+                                else if (obj.GetType() == typeof(SliderInfo))
+                                {
+                                    SliderInfo sliderInfo = (SliderInfo)obj;
+                                    string pointString = sliderInfo.Points.Aggregate("", (current, p) => current + ("|" + p.X + ':' + p.Y));
+                                    Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (int)obj.Type + "," + (int)obj.Effect + "," + sliderInfo.Type.ToString().Substring(0, 1) + pointString + "," + sliderInfo.RepeatCount + "," + sliderInfo.MaxPoints);
+                                }
+                                else if (obj.GetType() == typeof(SpinnerInfo))
+                                {
+                                    SpinnerInfo spinnerInfo = (SpinnerInfo)obj;
+                                    Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + (int)obj.Type + (int)obj.Effect + "," + spinnerInfo.EndTime);
+                                }
                             }
                             break;
                         default:

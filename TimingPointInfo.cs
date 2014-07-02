@@ -10,7 +10,6 @@ namespace BMAPI
         public int CustomSampleSet = 0;
         public int VolumePercentage = 100;
         public bool InheritsBPM = false;
-        public bool KiaiTime = false;
-        public bool OmitFirstBarLine = false;
+        public TimingPointOptions VisualOptions;
     }
 }

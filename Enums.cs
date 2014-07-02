@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace BMAPI
 {
     public enum OverlayOptions
@@ -11,24 +13,41 @@ namespace BMAPI
         osu = 0,
         Taiko = 1,
         CatchtheBeat = 2,
-        Mania = 3,
+        Mania = 3
     }
+
+    [Flags]
     public enum EffectType
     {
         None = 0,
-        Whistle = 2,
-        Finish = 4,
-        WhistleFinish = 6,
-        Clap = 8,
-        ClapWhistle = 10,
-        ClapFinish = 12,
-        ClapWhistleFinish = 14,
+        Whistle = (1 << 1),
+        Finish = (1 << 2),
+        Clap = (1 << 3),
     }
+
     public enum SliderType
     {
         Linear = 0,
         PSpline = 1,
         Bezier = 2,
-        CSpline = 3,
+        CSpline = 3
+    }
+    
+    [Flags]
+    public enum TimingPointOptions
+    {
+        None = 0,
+        KiaiTime = (1 << 0),
+        OmitFirstBarLine = (1 << 3)
+    }
+
+    [Flags]
+    public enum HitObjectType
+    {
+        None = 0,
+        Circle = (1 << 0),
+        Slider = (1 << 1),
+        NewCombo = (1 << 2),
+        Spinner = (1 << 3)
     }
 }
