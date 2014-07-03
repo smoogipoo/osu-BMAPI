@@ -273,7 +273,11 @@ namespace BMAPI
                                     break;
                             }
                             string[] pts = reSplit[5].Split(new[] { "|" }, StringSplitOptions.None);
-                            //Always exclude index 1, this will contain
+
+                            //Always add the location as a point
+                            ((SliderInfo)newObject).Points.Add(newObject.Location);
+
+                            //Always exclude index 1, this will contain the type
                             for (int i = 1; i <= pts.Length - 1; i++)
                             {
                                 PointInfo p = new PointInfo(Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.InvariantCulture))), 
@@ -412,7 +416,7 @@ namespace BMAPI
                                 else if (obj.GetType() == typeof(SpinnerInfo))
                                 {
                                     SpinnerInfo spinnerInfo = (SpinnerInfo)obj;
-                                    Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + (int)obj.Type + (int)obj.Effect + "," + spinnerInfo.EndTime);
+                                    Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (int)obj.Type + "," + (int)obj.Effect + "," + spinnerInfo.EndTime);
                                 }
                             }
                             break;

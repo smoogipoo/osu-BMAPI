@@ -84,5 +84,13 @@ namespace BMAPI
         {
             return new PointInfo(Left.X / Right.X, Left.Y / Right.Y);
         }
+        public static bool operator ==(PointInfo Left, PointInfo Right)
+        {
+            return (Left.X.CompareTo(Right.X) == 0 && Left.Y.CompareTo(Right.Y) == 0);
+        }
+        public static bool operator !=(PointInfo Left, PointInfo Right)
+        {
+            return (Left.X.CompareTo(Right.X) != 0 && Left.Y.CompareTo(Right.Y) != 0);
+        }
     }
 }
