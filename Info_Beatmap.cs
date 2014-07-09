@@ -2,7 +2,7 @@
 
 namespace BMAPI
 {
-    public class BeatmapInfo
+    public class Info_Beatmap
     {
         //Info
         public int? Format = null;
@@ -15,7 +15,7 @@ namespace BMAPI
         public int? PreviewTime = null;
         public int? Countdown = null;
         public string SampleSet;
-        public double? StackLeniency = null;
+        public float? StackLeniency = null;
         public GameMode? Mode = null;
         public int? LetterboxInBreaks = null;
         public int? SpecialStyle = null;
@@ -28,7 +28,7 @@ namespace BMAPI
         public int? EpilepsyWarning = null;
         public int? CustomSamples = null;
         public List<int> EditorBookmarks = new List<int>();
-        public double? EditorDistanceSpacing = null;
+        public float? EditorDistanceSpacing = null;
         public string AudioHash;
         public bool? AlwaysShowPlayfield = null;
 
@@ -36,9 +36,9 @@ namespace BMAPI
         public int? GridSize = null;
         public List<int> Bookmarks = new List<int>();
         public int? BeatDivisor = null;
-        public double? DistanceSpacing = null;
+        public float? DistanceSpacing = null;
         public int? CurrentTime = null;
-        public double? TimelineZoom = null;
+        public float? TimelineZoom = null;
 
         //Metadata
         public string Title;
@@ -53,9 +53,9 @@ namespace BMAPI
         public int? BeatmapSetID = null;
 
         //Difficulty
-        public double HPDrainRate = 5;
-        private double p_CircleSize = 5;
-        public double CircleSize
+        public float HPDrainRate = 5;
+        private float p_CircleSize = 5;
+        public float CircleSize
         {
             get
             {
@@ -64,28 +64,28 @@ namespace BMAPI
             set
             {
                 p_CircleSize = value;
-                foreach (BaseCircle hO in HitObjects)
+                foreach (HitObject_Circle hO in HitObjects)
                 {
                     hO.Radius = 40 - 4 * (value - 2);
                 }
             }
         }
-        public double OverallDifficulty = 5;
-        public double ApproachRate = 5;
-        public double SliderMultiplier = 1.4;
-        public double SliderTickRate = 1;
+        public float OverallDifficulty = 5;
+        public float ApproachRate = 5;
+        public float SliderMultiplier = 1.4f;
+        public float SliderTickRate = 1;
 
         //Events
-        public List<BaseEvent> Events = new List<BaseEvent>();
+        public List<Event_Base> Events = new List<Event_Base>();
 
         //Timingpoints
-        public List<TimingPointInfo> TimingPoints = new List<TimingPointInfo>();
+        public List<Info_TimingPoint> TimingPoints = new List<Info_TimingPoint>();
 
         //Colours
-        public List<ComboInfo> ComboColours = new List<ComboInfo>();
-        public ColourInfo SliderBorder = new ColourInfo { R = 255, G = 255, B = 255 };
+        public List<Info_Combo> ComboColours = new List<Info_Combo>();
+        public Helper_Colour SliderBorder = new Helper_Colour { R = 255, G = 255, B = 255 };
 
         //Hitobjects
-        public List<BaseCircle> HitObjects = new List<BaseCircle>();
+        public List<HitObject_Circle> HitObjects = new List<HitObject_Circle>();
     }
 }

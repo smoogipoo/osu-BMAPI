@@ -45,21 +45,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundInfo.cs" />
-    <Compile Include="BaseEvent.cs" />
-    <Compile Include="BaseCircle.cs" />
-    <Compile Include="BeatmapInfo.cs" />
+    <Compile Include="Event_Background.cs" />
+    <Compile Include="Event_Base.cs" />
+    <Compile Include="Event_Colour.cs" />
+    <Compile Include="HitObject_Circle.cs" />
+    <Compile Include="Info_Beatmap.cs" />
     <Compile Include="BMAPI.cs" />
-    <Compile Include="BreakInfo.cs" />
-    <Compile Include="ColourInfo.cs" />
-    <Compile Include="ComboInfo.cs" />
+    <Compile Include="Event_Break.cs" />
+    <Compile Include="Helper_Colour.cs" />
+    <Compile Include="Info_Combo.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="PointInfo.cs" />
+    <Compile Include="Helper_Point2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SliderInfo.cs" />
-    <Compile Include="SpinnerInfo.cs" />
-    <Compile Include="TimingPointInfo.cs" />
-    <Compile Include="VideoInfo.cs" />
+    <Compile Include="HitObject_Slider.cs" />
+    <Compile Include="HitObject_Spinner.cs" />
+    <Compile Include="Info_TimingPoint.cs" />
+    <Compile Include="Event_Video.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
