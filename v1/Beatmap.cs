@@ -253,6 +253,7 @@ namespace BMAPI.v1
                             case "0": case "1": case "video":
                                 newEvent = new ContentEvent
                                 {
+                                    Type = reSplit[0].ToLower() == "1" || reSplit[0].ToLower() == "video" ? ContentType.Video : ContentType.Image,
                                     StartTime = Convert.ToInt32(reSplit[1]),
                                     Filename = reSplit[2].Replace("\"", "")
                                 };

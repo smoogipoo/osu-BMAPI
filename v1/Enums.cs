@@ -50,4 +50,10 @@ namespace BMAPI.v1
         NewCombo = (1 << 2),
         Spinner = (1 << 3)
     }
+
+    public enum ContentType
+    {
+        Video,
+        Image
+    }
 }
