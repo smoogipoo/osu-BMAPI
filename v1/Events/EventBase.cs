@@ -8,6 +8,6 @@
             StartTime = baseInstance.StartTime;
         }
 
-        public int StartTime { get; set; }
+        public float StartTime { get; set; }
     }
 }

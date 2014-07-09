@@ -17,7 +17,7 @@ namespace BMAPI.v1.HitObjects
 
         public Point2 Location = new Point2(0, 0);
         public float Radius = 80;
-        public int StartTime { get; set; }
+        public float StartTime { get; set; }
         public HitObjectType Type { get; set; }
         public EffectType Effect = EffectType.None;
 

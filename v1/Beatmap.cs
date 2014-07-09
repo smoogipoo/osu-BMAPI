@@ -350,7 +350,7 @@ namespace BMAPI.v1
                         {
                             Radius = 40 - 4 * (Info.CircleSize - 2),
                             Location = new Point2(Convert.ToInt32(reSplit[0]), Convert.ToInt32(reSplit[1])),
-                            StartTime = Convert.ToInt32(reSplit[2]),
+                            StartTime = (float)Convert.ToDouble(reSplit[2]),
                             Type = (HitObjectType)Convert.ToInt32(reSplit[3]),
                             Effect = (EffectType)Convert.ToInt32(reSplit[4])
                         };
@@ -395,7 +395,7 @@ namespace BMAPI.v1
                         if ((newObject.Type & HitObjectType.Spinner) > 0)
                         {
                             newObject = new SpinnerObject(newObject);
-                            ((SpinnerObject)newObject).EndTime = Convert.ToInt32(reSplit[5]);
+                            ((SpinnerObject)newObject).EndTime = (float)Convert.ToDouble(reSplit[5]);
                         }
                         Info.HitObjects.Add(newObject);
                     }

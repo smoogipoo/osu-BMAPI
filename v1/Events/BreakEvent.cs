@@ -6,6 +6,6 @@ namespace BMAPI.v1.Events
         public BreakEvent() { }
         public BreakEvent(EventBase baseInstance) : base(baseInstance) { }
 
-        public int EndTime { get; set; }
+        public float EndTime { get; set; }
     }
 }
