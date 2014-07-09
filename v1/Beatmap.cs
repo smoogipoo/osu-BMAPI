@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading;
-using System.Reflection;
-using System.Globalization;
-
-using BMAPI.v1.HitObjects;
 using BMAPI.v1.Events;
+using BMAPI.v1.HitObjects;
 
 namespace BMAPI.v1
 {
