@@ -1,7 +1,7 @@
 ﻿
-namespace BMAPI
+namespace BMAPI.v1
 {
-    public class Info_TimingPoint
+    public class TimingPoint
     {
         public float Time { get; set; }
         public float BpmDelay { get; set; }

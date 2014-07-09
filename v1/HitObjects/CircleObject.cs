@@ -1,10 +1,11 @@
 ﻿using System;
-namespace BMAPI
+
+namespace BMAPI.v1.HitObjects
 {
-    public class HitObject_Circle
+    public class CircleObject
     {
-        public HitObject_Circle() { }
-        public HitObject_Circle(HitObject_Circle baseInstance)
+        public CircleObject() { }
+        public CircleObject(CircleObject baseInstance)
         {
             //Copy from baseInstance
             Location = baseInstance.Location;
@@ -14,13 +15,13 @@ namespace BMAPI
             Effect = baseInstance.Effect;
         }
 
-        public Helper_Point2 Location = new Helper_Point2(0, 0);
+        public Point2 Location = new Point2(0, 0);
         public float Radius = 80;
         public int StartTime { get; set; }
         public HitObjectType Type { get; set; }
         public EffectType Effect = EffectType.None;
 
-        public virtual bool ContainsPoint(Helper_Point2 Point)
+        public virtual bool ContainsPoint(Point2 Point)
         {
             return Math.Sqrt(Math.Pow(Point.X - Location.X, 2) + Math.Pow(Point.Y - Location.Y, 2)) <= Radius;
         }

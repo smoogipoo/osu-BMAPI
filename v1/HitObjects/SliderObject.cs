@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BMAPI
+namespace BMAPI.v1.HitObjects
 {
-    public class HitObject_Slider : HitObject_Circle
+    public class SliderObject : CircleObject
     {
-        public HitObject_Slider() { }
-        public HitObject_Slider(HitObject_Circle baseInstance) : base(baseInstance) { }
+        public SliderObject() { }
+        public SliderObject(CircleObject baseInstance) : base(baseInstance) { }
 
         public new SliderType Type = SliderType.Linear;
-        public List<Helper_Point2> Points = new List<Helper_Point2>();
+        public List<Point2> Points = new List<Point2>();
         public int RepeatCount { get; set; }
         public float Velocity { get; set; }
         public float MaxPoints { get; set; }
@@ -82,7 +82,7 @@ namespace BMAPI
                     return 0;
             }
         }
-        public Helper_Point2 PositionAtTime(int Time)
+        public Point2 PositionAtTime(int Time)
         {
             float T = (SegmentEndTime(1) - StartTime) / Time;
             switch (Type)
@@ -96,21 +96,21 @@ namespace BMAPI
                 case SliderType.Bezier:
                     return BezInterpolate(Points, T);
                 default:
-                    return new Helper_Point2();
+                    return new Point2();
             }
         }
 
         #region Linear Interpolation
-        public Helper_Point2 LinInterpolate(Helper_Point2 P1, Helper_Point2 P2, float T)
+        public Point2 LinInterpolate(Point2 P1, Point2 P2, float T)
         {
-            return new Helper_Point2((1 - T) * P1.X + T * P2.X, (1 - T) * P1.Y + T * P2.Y);
+            return new Point2((1 - T) * P1.X + T * P2.X, (1 - T) * P1.Y + T * P2.Y);
         }
         #endregion
 
         #region Spline Interpolation
         public class Spline : List<SplineFunction>
         {
-            public Spline(IList<Helper_Point2> Points)
+            public Spline(IList<Point2> Points)
             {
                 List<float> Times = new List<float>();
                 for (float i = 0; i <= 1; i += 1f / Points.Count)
@@ -119,18 +119,18 @@ namespace BMAPI
                 }
                 int n = Points.Count - 1;
 
-                Helper_Point2[] b = new Helper_Point2[n];
-                Helper_Point2[] d = new Helper_Point2[n];
-                Helper_Point2[] a = new Helper_Point2[n];
-                Helper_Point2[] c = new Helper_Point2[n + 1];
-                Helper_Point2[] l = new Helper_Point2[n + 1];
-                Helper_Point2[] u = new Helper_Point2[n + 1];
-                Helper_Point2[] z = new Helper_Point2[n + 1];
+                Point2[] b = new Point2[n];
+                Point2[] d = new Point2[n];
+                Point2[] a = new Point2[n];
+                Point2[] c = new Point2[n + 1];
+                Point2[] l = new Point2[n + 1];
+                Point2[] u = new Point2[n + 1];
+                Point2[] z = new Point2[n + 1];
                 float[] h = new float[n + 1];
 
-                l[0] = new Helper_Point2(1);
-                u[0] = new Helper_Point2(0);
-                z[0] = new Helper_Point2(0);
+                l[0] = new Point2(1);
+                u[0] = new Point2(0);
+                z[0] = new Point2(0);
                 h[0] = Times[1] - Times[0];
 
                 for (int i = 1; i < n; i++)
@@ -141,8 +141,8 @@ namespace BMAPI
                     a[i] = (3 / h[i]) * (Points[i + 1] - Points[i]) - ((3 / h[i - 1]) * (Points[i] - Points[i - 1]));
                     z[i] = (a[i] - (h[i - 1] * z[i - 1])) / l[i];
                 }
-                l[n] = new Helper_Point2(1);
-                z[n] = c[n] = new Helper_Point2(0);
+                l[n] = new Point2(1);
+                z[n] = c[n] = new Point2(0);
 
                 for (int j = n - 1; j >= 0; j--)
                 {
@@ -157,9 +157,9 @@ namespace BMAPI
                 }
             }
 
-            private Helper_Point2 Interpolate(float T)
+            private Point2 Interpolate(float T)
             {
-                if (Count == 0) return new Helper_Point2();
+                if (Count == 0) return new Point2();
 
                 Sort();
                 SplineFunction it = this.LastOrDefault(sf => sf.T <= T);
@@ -172,8 +172,8 @@ namespace BMAPI
                 float ret = 0;
                 for (float f = 0; f < 1f; f += prec)
                 {
-                    Helper_Point2 a = Interpolate(f);
-                    Helper_Point2 b = Interpolate(f + prec);
+                    Point2 a = Interpolate(f);
+                    Point2 b = Interpolate(f + prec);
                     ret += (float)Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
                 }
                 return ret;
@@ -181,14 +181,14 @@ namespace BMAPI
         }
         public class SplineFunction : IComparable
         {
-            internal Helper_Point2 _a, _b, _c, _d;
+            internal Point2 _a, _b, _c, _d;
             internal float T { get; set; }
 
             public SplineFunction(float x)
             {
                 T = x;
             }
-            public SplineFunction(float x, Helper_Point2 a, Helper_Point2 b, Helper_Point2 c, Helper_Point2 d)
+            public SplineFunction(float x, Point2 a, Point2 b, Point2 c, Point2 d)
             {
                 _a = a;
                 _b = b;
@@ -201,15 +201,15 @@ namespace BMAPI
                 return Obj == null ? 1 : T.CompareTo(((SplineFunction)Obj).T);
             }
 
-            public Helper_Point2 Eval(float x)
+            public Point2 Eval(float x)
             {
                 float xix = x - T;
                 return _a + _b * xix + _c * (xix * xix) + _d * (xix * xix * xix);
             }
         }
-        public Helper_Point2 SplInterpolate(Spline Spline, float T)
+        public Point2 SplInterpolate(Spline Spline, float T)
         {
-            if (Spline.Count == 0) return new Helper_Point2();
+            if (Spline.Count == 0) return new Point2();
 
             Spline.Sort();
             SplineFunction it = Spline.LastOrDefault(sf => sf.T <= T);
@@ -218,11 +218,11 @@ namespace BMAPI
         #endregion
 
         #region Bezier Interpolation
-        public Helper_Point2 BezInterpolate(List<Helper_Point2> Pts, float T)
+        public Point2 BezInterpolate(List<Point2> Pts, float T)
         {
             //This can be done recursively, current method is probably ineffective
             int n = Pts.Count - 1;
-            Helper_Point2[] points = new Helper_Point2[Pts.Count];
+            Point2[] points = new Point2[Pts.Count];
 
             for (int i = 0; i <= n; i++)
             {
@@ -238,13 +238,13 @@ namespace BMAPI
             return points[0];
         }
 
-        public float BezierLength(List<Helper_Point2> Pts, float prec = 0.01f)
+        public float BezierLength(List<Point2> Pts, float prec = 0.01f)
         {
             float ret = 0;
             for (float f = 0; f < 1f; f += prec)
             {
-                Helper_Point2 a = BezInterpolate(Pts, f);
-                Helper_Point2 b = BezInterpolate(Pts, f + prec);
+                Point2 a = BezInterpolate(Pts, f);
+                Point2 b = BezInterpolate(Pts, f + prec);
                 ret += (float)Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
             }
             return ret;
@@ -254,13 +254,13 @@ namespace BMAPI
 
 
 
-        public override bool ContainsPoint(Helper_Point2 Point)
+        public override bool ContainsPoint(Point2 Point)
         {
             return ContainsPoint(Point, 0);
         }
-        public bool ContainsPoint(Helper_Point2 Point, int Time)
+        public bool ContainsPoint(Point2 Point, int Time)
         {
-            Helper_Point2 pAtTime = PositionAtTime(Time);
+            Point2 pAtTime = PositionAtTime(Time);
             return Math.Sqrt(Math.Pow(Point.X - pAtTime.X, 2) + Math.Pow(Point.Y - pAtTime.Y, 2)) <= Radius;            
         }
     }

@@ -1,9 +1,9 @@
 ﻿namespace BMAPI
 {
-    public class Helper_Colour
+    public class Colour
     {
-        public Helper_Colour() { }
-        public Helper_Colour(Helper_Colour baseInstance)
+        public Colour() { }
+        public Colour(Colour baseInstance)
         {
             R = baseInstance.R;
             G = baseInstance.G;

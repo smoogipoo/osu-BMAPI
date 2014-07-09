@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace BMAPI
+namespace BMAPI.v1
 {
     public enum OverlayOptions
     {

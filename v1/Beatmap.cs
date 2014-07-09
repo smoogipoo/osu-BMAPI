@@ -7,15 +7,104 @@ using System.Threading;
 using System.Reflection;
 using System.Globalization;
 
+using BMAPI.v1.HitObjects;
+using BMAPI.v1.Events;
 
-namespace BMAPI
+namespace BMAPI.v1
 {
-    public class Beatmap : Info_Beatmap
+    public class BeatmapInfo
     {
-        internal readonly Info_Beatmap Info = new Info_Beatmap();
-        internal readonly Dictionary<string, string> BM_Sections = new Dictionary<string, string>();
-        internal readonly List<string> WriteBuffer = new List<string>();
-        internal readonly Dictionary<string, int> SectionLength = new Dictionary<string, int>();
+        //Info
+        public int? Format = null;
+        public string Filename;
+        public string BeatmapHash;
+
+        //General
+        public string AudioFilename;
+        public int? AudioLeadIn = null;
+        public int? PreviewTime = null;
+        public int? Countdown = null;
+        public string SampleSet;
+        public float? StackLeniency = null;
+        public GameMode? Mode = null;
+        public int? LetterboxInBreaks = null;
+        public int? SpecialStyle = null;
+        public int? CountdownOffset = null;
+        public OverlayOptions? OverlayPosition = null;
+        public string SkinPreference;
+        public int? WidescreenStoryboard = null;
+        public int? UseSkinSprites = null;
+        public int? StoryFireInFront = null;
+        public int? EpilepsyWarning = null;
+        public int? CustomSamples = null;
+        public List<int> EditorBookmarks = new List<int>();
+        public float? EditorDistanceSpacing = null;
+        public string AudioHash;
+        public bool? AlwaysShowPlayfield = null;
+
+        //Editor (Other Editor tag stuff (v12))
+        public int? GridSize = null;
+        public List<int> Bookmarks = new List<int>();
+        public int? BeatDivisor = null;
+        public float? DistanceSpacing = null;
+        public int? CurrentTime = null;
+        public float? TimelineZoom = null;
+
+        //Metadata
+        public string Title;
+        public string TitleUnicode;
+        public string Artist;
+        public string ArtistUnicode;
+        public string Creator;
+        public string Version;
+        public string Source;
+        public List<string> Tags = new List<string>();
+        public int? BeatmapID = null;
+        public int? BeatmapSetID = null;
+
+        //Difficulty
+        public float HPDrainRate = 5;
+        private float p_CircleSize = 5;
+        public float CircleSize
+        {
+            get
+            {
+                return p_CircleSize;
+            }
+            set
+            {
+                p_CircleSize = value;
+                foreach (CircleObject hO in HitObjects)
+                {
+                    hO.Radius = 40 - 4 * (value - 2);
+                }
+            }
+        }
+        public float OverallDifficulty = 5;
+        public float ApproachRate = 5;
+        public float SliderMultiplier = 1.4f;
+        public float SliderTickRate = 1;
+
+        //Events
+        public List<EventBase> Events = new List<EventBase>();
+
+        //Timingpoints
+        public List<TimingPoint> TimingPoints = new List<TimingPoint>();
+
+        //Colours
+        public List<Combo> ComboColours = new List<Combo>();
+        public Colour SliderBorder = new Colour { R = 255, G = 255, B = 255 };
+
+        //Hitobjects
+        public List<CircleObject> HitObjects = new List<CircleObject>();
+    }
+
+    public class Beatmap : BeatmapInfo
+    {
+        private readonly BeatmapInfo Info = new BeatmapInfo();
+        private readonly Dictionary<string, string> BM_Sections = new Dictionary<string, string>();
+        private readonly List<string> WriteBuffer = new List<string>();
+        private readonly Dictionary<string, int> SectionLength = new Dictionary<string, int>();
 
         /// <summary>
         /// Creates a new Beatmap object
@@ -91,22 +180,22 @@ namespace BMAPI
                         switch (cProperty)
                         {
                             case "EditorBookmarks":
-                            {
-                                string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                                foreach (string m in marks.Where(m => m != ""))
                                 {
-                                    Info.EditorBookmarks.Add(Convert.ToInt32(m));
+                                    string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                                    foreach (string m in marks.Where(m => m != ""))
+                                    {
+                                        Info.EditorBookmarks.Add(Convert.ToInt32(m));
+                                    }
                                 }
-                            }
                                 break;
                             case "Bookmarks":
-                            {
-                                string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                                foreach (string m in marks.Where(m => m != ""))
                                 {
-                                    Info.Bookmarks.Add(Convert.ToInt32(m));
+                                    string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                                    foreach (string m in marks.Where(m => m != ""))
+                                    {
+                                        Info.Bookmarks.Add(Convert.ToInt32(m));
+                                    }
                                 }
-                            }
                                 break;
                             case "Tags":
                                 string[] tags = cValue.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -155,35 +244,30 @@ namespace BMAPI
                     if (currentSection == "[Events]")
                     {
                         string[] reSplit = line.Split(',');
-                        Event_Base newEvent = null;
+                        EventBase newEvent = null;
                         switch (reSplit[0].ToLower())
                         {
                             case "0":
-                                newEvent = new Event_Background
-                                {
-                                    StartTime = Convert.ToInt32(reSplit[1]),
-                                    Filename = reSplit[2].Replace("\"", "")
-                                };
-                                break;
-                            case "1": case "video":
-                                newEvent = new Event_Video
+                            case "1":
+                            case "video":
+                                newEvent = new ContentEvent
                                 {
                                     StartTime = Convert.ToInt32(reSplit[1]),
                                     Filename = reSplit[2].Replace("\"", "")
                                 };
                                 break;
                             case "2":
-                                newEvent = new Event_Break
+                                newEvent = new BreakEvent
                                 {
                                     StartTime = Convert.ToInt32(reSplit[1]),
                                     EndTime = Convert.ToInt32(reSplit[2])
                                 };
                                 break;
                             case "3":
-                                newEvent = new Event_Colour
+                                newEvent = new BackgroundColourEvent
                                 {
                                     StartTime = Convert.ToInt32(reSplit[1]),
-                                    Colour = new Helper_Colour
+                                    Colour = new Colour
                                     {
                                         R = Convert.ToInt32(reSplit[2]),
                                         G = Convert.ToInt32(reSplit[3]),
@@ -198,7 +282,7 @@ namespace BMAPI
                     //Do work for [TimingPoints] section
                     if (currentSection == "[TimingPoints]")
                     {
-                        Info_TimingPoint tempTimingPoint = new Info_TimingPoint();
+                        TimingPoint tempTimingPoint = new TimingPoint();
 
                         float[] values = { 0, 0, 4, 0, 0, 100, 0, 0, 0 };
                         string[] reSplit = line.Split(',');
@@ -223,7 +307,7 @@ namespace BMAPI
                         string property = line.Substring(0, line.IndexOf(':', 1)).Trim();
                         string value = line.Substring(line.IndexOf(':', 1) + 1).Trim();
                         string[] reSplit = value.Split(',');
-                        Helper_Colour newColour = new Helper_Colour
+                        Colour newColour = new Colour
                         {
                             R = Convert.ToInt32(reSplit[0]),
                             G = Convert.ToInt32(reSplit[1]),
@@ -238,7 +322,7 @@ namespace BMAPI
 
                             //Combo colour info
                             default:
-                                Info_Combo combo = new Info_Combo(newColour)
+                                Combo combo = new Combo(newColour)
                                 {
                                     ComboNumber = Convert.ToInt32(property.Substring(5, 1)),
                                 };
@@ -251,56 +335,56 @@ namespace BMAPI
                     if (currentSection == "[HitObjects]")
                     {
                         string[] reSplit = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        HitObject_Circle newObject = new HitObject_Circle
+                        CircleObject newObject = new CircleObject
                         {
                             Radius = 40 - 4 * (Info.CircleSize - 2),
-                            Location = new Helper_Point2(Convert.ToInt32(reSplit[0]), Convert.ToInt32(reSplit[1])),
+                            Location = new Point2(Convert.ToInt32(reSplit[0]), Convert.ToInt32(reSplit[1])),
                             StartTime = Convert.ToInt32(reSplit[2]),
                             Type = (HitObjectType)Convert.ToInt32(reSplit[3]),
                             Effect = (EffectType)Convert.ToInt32(reSplit[4])
                         };
                         if ((newObject.Type & HitObjectType.Slider) > 0)
                         {
-                            newObject = new HitObject_Slider(newObject);
-                            ((HitObject_Slider)newObject).Velocity = Info.SliderMultiplier;
+                            newObject = new SliderObject(newObject);
+                            ((SliderObject)newObject).Velocity = Info.SliderMultiplier;
                             switch (reSplit[5].Substring(0, 1))
                             {
                                 case "B":
-                                    ((HitObject_Slider)newObject).Type = SliderType.Bezier;
+                                    ((SliderObject)newObject).Type = SliderType.Bezier;
                                     break;
                                 case "C":
-                                    ((HitObject_Slider)newObject).Type = SliderType.CSpline;
+                                    ((SliderObject)newObject).Type = SliderType.CSpline;
                                     break;
                                 case "L":
-                                    ((HitObject_Slider)newObject).Type = SliderType.Linear;
+                                    ((SliderObject)newObject).Type = SliderType.Linear;
                                     break;
                                 case "P":
-                                    ((HitObject_Slider)newObject).Type = SliderType.PSpline;
+                                    ((SliderObject)newObject).Type = SliderType.PSpline;
                                     break;
                             }
                             string[] pts = reSplit[5].Split(new[] { "|" }, StringSplitOptions.None);
 
                             //Always add the location as a point
-                            ((HitObject_Slider)newObject).Points.Add(newObject.Location);
+                            ((SliderObject)newObject).Points.Add(newObject.Location);
 
                             //Always exclude index 1, this will contain the type
                             for (int i = 1; i <= pts.Length - 1; i++)
                             {
-                                Helper_Point2 p = new Helper_Point2((float)Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.InvariantCulture))), 
+                                Point2 p = new Point2((float)Convert.ToDouble(pts[i].Substring(0, pts[i].IndexOf(":", StringComparison.InvariantCulture))),
                                                             (float)Convert.ToDouble(pts[i].Substring(pts[i].IndexOf(":", StringComparison.InvariantCulture) + 1)));
-                                ((HitObject_Slider)newObject).Points.Add(p);
+                                ((SliderObject)newObject).Points.Add(p);
                             }
-                            ((HitObject_Slider)newObject).RepeatCount = Convert.ToInt32(reSplit[6]);
+                            ((SliderObject)newObject).RepeatCount = Convert.ToInt32(reSplit[6]);
                             float tempMaxPoints;
                             if (float.TryParse(reSplit[7], out tempMaxPoints))
                             {
-                                ((HitObject_Slider)newObject).MaxPoints = tempMaxPoints;
+                                ((SliderObject)newObject).MaxPoints = tempMaxPoints;
                             }
                         }
                         if ((newObject.Type & HitObjectType.Spinner) > 0)
                         {
-                            newObject = new HitObject_Spinner(newObject);
-                            ((HitObject_Spinner)newObject).EndTime = Convert.ToInt32(reSplit[5]);
+                            newObject = new SpinnerObject(newObject);
+                            ((SpinnerObject)newObject).EndTime = Convert.ToInt32(reSplit[5]);
                         }
                         Info.HitObjects.Add(newObject);
                     }
@@ -366,64 +450,59 @@ namespace BMAPI
                             }
                             break;
                         case "Events":
-                            foreach (Event_Base o in (IEnumerable<Event_Base>)f1.GetValue(this))
+                            foreach (EventBase o in (IEnumerable<EventBase>)f1.GetValue(this))
                             {
-                                if (o.GetType() == typeof(Event_Background))
+                                if (o.GetType() == typeof(ContentEvent))
                                 {
-                                    Event_Background backgroundInfo = (Event_Background)o;
+                                    ContentEvent backgroundInfo = (ContentEvent)o;
                                     Save("Events", "0," + o.StartTime + ",\"" + backgroundInfo.Filename + "\"");
                                 }
-                                else if (o.GetType() == typeof(Event_Video))
+                                else if (o.GetType() == typeof(BreakEvent))
                                 {
-                                    Event_Video videoInfo = (Event_Video)o;
-                                    Save("Events", "1," + o.StartTime + ",\"" + videoInfo.Filename + "\"");
-                                }
-                                else if (o.GetType() == typeof(Event_Break))
-                                {
-                                    Event_Break breakInfo = (Event_Break)o;
+                                    BreakEvent breakInfo = (BreakEvent)o;
                                     Save("Events", "2," + o.StartTime + "," + breakInfo.EndTime);
                                 }
-                                else if (o.GetType() == typeof(Event_Colour))
+                                else if (o.GetType() == typeof(BackgroundColourEvent))
                                 {
-                                    Event_Colour colourInfo = (Event_Colour)o;
+                                    BackgroundColourEvent colourInfo = (BackgroundColourEvent)o;
                                     Save("Events", "3," + o.StartTime + "," + colourInfo.Colour.R + "," + colourInfo.Colour.G + "," + colourInfo.Colour.B);
                                 }
                             }
                             break;
                         case "TimingPoints":
                             {
-                                foreach (Info_TimingPoint o in (IEnumerable<Info_TimingPoint>)f1.GetValue(this))
+                                foreach (TimingPoint o in (IEnumerable<TimingPoint>)f1.GetValue(this))
                                     Save("TimingPoints", o.Time + "," + o.BpmDelay + "," + o.TimeSignature + "," + o.SampleSet + "," + o.CustomSampleSet + "," + o.VolumePercentage + "," + Convert.ToInt32(!o.InheritsBPM) + "," + (int)o.VisualOptions);
                             }
                             break;
                         case "ComboColours":
                             {
-                                foreach (Info_Combo o in (IEnumerable<Info_Combo>)f1.GetValue(this))
+                                foreach (Combo o in (IEnumerable<Combo>)f1.GetValue(this))
                                     Save("Colours", "Combo" + o.ComboNumber + ':' + o.Colour.R + "," + o.Colour.G + "," + o.Colour.B);
                             }
                             break;
                         case "SliderBorder":
                             {
-                                Helper_Colour o = (Helper_Colour)f1.GetValue(this);
+                                Colour o = (Colour)f1.GetValue(this);
                                 Save("Colours", "SliderBorder: " + o.R + "," + o.G + "," + o.B);
                             }
                             break;
                         case "HitObjects":
-                            foreach (HitObject_Circle obj in (IEnumerable<HitObject_Circle>)f1.GetValue(this))
+                            foreach (CircleObject obj in (IEnumerable<CircleObject>)f1.GetValue(this))
                             {
-                                if (obj.GetType() == typeof(HitObject_Circle))
+                                if (obj.GetType() == typeof(CircleObject))
                                 {
                                     Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (int)obj.Type + "," + (int)obj.Effect);
                                 }
-                                else if (obj.GetType() == typeof(HitObject_Slider))
+                                else if (obj.GetType() == typeof(SliderObject))
                                 {
-                                    HitObject_Slider sliderInfo = (HitObject_Slider)obj;
+                                    SliderObject sliderInfo = (SliderObject)obj;
                                     string pointString = sliderInfo.Points.Aggregate("", (current, p) => current + ("|" + p.X + ':' + p.Y));
                                     Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (int)obj.Type + "," + (int)obj.Effect + "," + sliderInfo.Type.ToString().Substring(0, 1) + pointString + "," + sliderInfo.RepeatCount + "," + sliderInfo.MaxPoints);
                                 }
-                                else if (obj.GetType() == typeof(HitObject_Spinner))
+                                else if (obj.GetType() == typeof(SpinnerObject))
                                 {
-                                    HitObject_Spinner spinnerInfo = (HitObject_Spinner)obj;
+                                    SpinnerObject spinnerInfo = (SpinnerObject)obj;
                                     Save("HitObjects", obj.Location.X + "," + obj.Location.Y + "," + obj.StartTime + "," + (int)obj.Type + "," + (int)obj.Effect + "," + spinnerInfo.EndTime);
                                 }
                             }
