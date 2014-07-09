@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Security.Cryptography;
@@ -143,28 +144,22 @@ namespace BMAPI.v1
                 {
                     string line = sR.ReadLine();
 
-                    //Check for blank lines
-                    if ((line == "") || (line.Length < 2))
-                        continue;
-
                     //Check for section tag
-                    if (line.Substring(0, 1) == "[")
+                    if (line.StartsWith("["))
                     {
                         currentSection = line;
                         continue;
                     }
 
                     //Check for commented-out line
-                    if (line.Substring(0, 2) == "//")
+                    //or blank lines
+                    if (line.StartsWith("//") || line.Length == 0)
                         continue;
 
                     //Check for version string
-                    if (line.Length > 17)
+                    if (line.StartsWith("osu file format"))
                     {
-                        if (line.Substring(0, 17) == "osu file format v")
-                        {
-                            Info.Format = Convert.ToInt32(line.Substring(17).Replace(Environment.NewLine, "").Replace(" ", ""));
-                        }
+                        Info.Format = Convert.ToInt32(line.Substring(17).Replace(Environment.NewLine, "").Replace(" ", ""));
                     }
 
                     //Do work for [General], [Metadata], [Difficulty] and [Editor] sections
@@ -172,6 +167,15 @@ namespace BMAPI.v1
                     {
                         string[] reSplit = line.Split(':');
                         string cProperty = reSplit[0].TrimEnd();
+
+                        bool isValidProperty = false;
+                        foreach (string k in BM_Sections.Keys)
+                        {
+                            if (k.Contains(cProperty))
+                                isValidProperty = true;
+                        }
+                        if (!isValidProperty)
+                            continue;
 
                         //Check for blank value
                         string cValue = reSplit[1].Trim();
@@ -206,7 +210,7 @@ namespace BMAPI.v1
                                 Info.Mode = (GameMode)Convert.ToInt32(cValue);
                                 break;
                             case "OverlayPosition":
-                                Info.OverlayPosition = (OverlayOptions)Convert.ToInt32(cValue);
+                                Info.OverlayPosition = (OverlayOptions)Enum.Parse(typeof(OverlayOptions), cValue);
                                 break;
                             case "AlwaysShowPlayfield":
                                 Info.AlwaysShowPlayfield = Convert.ToBoolean(Convert.ToInt32(cValue));
@@ -247,9 +251,7 @@ namespace BMAPI.v1
                         EventBase newEvent = null;
                         switch (reSplit[0].ToLower())
                         {
-                            case "0":
-                            case "1":
-                            case "video":
+                            case "0": case "1": case "video":
                                 newEvent = new ContentEvent
                                 {
                                     StartTime = Convert.ToInt32(reSplit[1]),
@@ -307,27 +309,36 @@ namespace BMAPI.v1
                         string property = line.Substring(0, line.IndexOf(':', 1)).Trim();
                         string value = line.Substring(line.IndexOf(':', 1) + 1).Trim();
                         string[] reSplit = value.Split(',');
-                        Colour newColour = new Colour
-                        {
-                            R = Convert.ToInt32(reSplit[0]),
-                            G = Convert.ToInt32(reSplit[1]),
-                            B = Convert.ToInt32(reSplit[2])
-                        };
 
-                        switch (property)
+                        if (property.Length > 5 && property.Substring(0, 5) == "Combo")
                         {
-                            case "SliderBorder":
-                                Info.SliderBorder = newColour;
-                                break;
-
-                            //Combo colour info
-                            default:
-                                Combo combo = new Combo(newColour)
+                            Combo newCombo = new Combo
+                            {
+                                Colour = new Colour
                                 {
-                                    ComboNumber = Convert.ToInt32(property.Substring(5, 1)),
-                                };
-                                Info.ComboColours.Add(combo);
-                                break;
+                                    R = Convert.ToInt32(reSplit[0]),
+                                    G = Convert.ToInt32(reSplit[1]),
+                                    B = Convert.ToInt32(reSplit[2])
+                                }
+                            };
+                            try
+                            {
+                                newCombo.ComboNumber = Convert.ToInt32(property.Substring(5, 1));
+                            }
+                            catch
+                            {
+                                Debug.Assert(false, "Invalid combonumber at index 5. " + line);
+                                continue;
+                            }
+                        }
+                        else if (property.Length > 5 && property == "SliderBorder")
+                        {
+                            Info.SliderBorder = new Colour
+                            {
+                                R = Convert.ToInt32(reSplit[0]),
+                                G = Convert.ToInt32(reSplit[1]),
+                                B = Convert.ToInt32(reSplit[2])
+                            };
                         }
                     }
 
