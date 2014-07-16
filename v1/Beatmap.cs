@@ -247,26 +247,27 @@ namespace BMAPI.v1
                     if (currentSection == "[Events]")
                     {
                         string[] reSplit = line.Split(',');
-                        EventBase newEvent = null;
                         switch (reSplit[0].ToLower())
                         {
-                            case "0": case "1": case "video":
-                                newEvent = new ContentEvent
+                            case "0": 
+                            case "1": 
+                            case "video":
+                                Info.Events.Add(new ContentEvent
                                 {
                                     Type = reSplit[0].ToLower() == "1" || reSplit[0].ToLower() == "video" ? ContentType.Video : ContentType.Image,
                                     StartTime = Convert.ToInt32(reSplit[1]),
                                     Filename = reSplit[2].Replace("\"", "")
-                                };
+                                });
                                 break;
                             case "2":
-                                newEvent = new BreakEvent
+                                Info.Events.Add(new BreakEvent
                                 {
                                     StartTime = Convert.ToInt32(reSplit[1]),
                                     EndTime = Convert.ToInt32(reSplit[2])
-                                };
+                                });
                                 break;
                             case "3":
-                                newEvent = new BackgroundColourEvent
+                                Info.Events.Add(new BackgroundColourEvent
                                 {
                                     StartTime = Convert.ToInt32(reSplit[1]),
                                     Colour = new Colour
@@ -275,10 +276,9 @@ namespace BMAPI.v1
                                         G = Convert.ToInt32(reSplit[3]),
                                         B = Convert.ToInt32(reSplit[4])
                                     },
-                                };
+                                });
                                 break;
                         }
-                        Info.Events.Add(newEvent);
                     }
 
                     //Do work for [TimingPoints] section
