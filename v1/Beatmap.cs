@@ -290,7 +290,7 @@ namespace BMAPI.v1
                         string[] reSplit = line.Split(',');
                         for (int i = 0; i < reSplit.Length; i++)
                         {
-                            values[i] += (float)Convert.ToDouble(reSplit[i]);
+                            values[i] = (float)Convert.ToDouble(reSplit[i]);
                         }
                         tempTimingPoint.Time = (float)Convert.ToDouble(values[0]);
                         tempTimingPoint.BpmDelay = (float)Convert.ToDouble(values[1]);
