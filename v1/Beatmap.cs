@@ -477,12 +477,14 @@ namespace BMAPI.v1
                                     Save("Colours", "Combo" + o.ComboNumber + ':' + o.Colour.R + "," + o.Colour.G + "," + o.Colour.B);
                             }
                             break;
-                        case "SliderBorder":
-                            {
-                                Colour o = (Colour)f1.GetValue(this);
-                                Save("Colours", "SliderBorder: " + o.R + "," + o.G + "," + o.B);
-                            }
-                            break;
+                        //case "SliderBorder":
+                        //    {
+                        //        if (f1.GetValue(this) == f2.GetValue(Info))
+                        //            continue;
+                        //        Colour o = (Colour)f1.GetValue(this);
+                        //        Save("Colours", "SliderBorder: " + o.R + "," + o.G + "," + o.B);
+                        //    }
+                        //    break;
                         case "HitObjects":
                             foreach (CircleObject obj in (IEnumerable<CircleObject>)f1.GetValue(this))
                             {
