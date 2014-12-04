@@ -157,9 +157,7 @@ namespace BMAPI.v1
 
                     //Check for version string
                     if (line.StartsWith("osu file format"))
-                    {
                         Info.Format = Convert.ToInt32(line.Substring(17).Replace(Environment.NewLine, "").Replace(" ", ""));
-                    }
 
                     //Do work for [General], [Metadata], [Difficulty] and [Editor] sections
                     if ((currentSection == "[General]") || (currentSection == "[Metadata]") || (currentSection == "[Difficulty]") || (currentSection == "[Editor]"))
@@ -186,18 +184,14 @@ namespace BMAPI.v1
                                 {
                                     string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                                     foreach (string m in marks.Where(m => m != ""))
-                                    {
                                         Info.EditorBookmarks.Add(Convert.ToInt32(m));
-                                    }
                                 }
                                 break;
                             case "Bookmarks":
                                 {
                                     string[] marks = cValue.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                                     foreach (string m in marks.Where(m => m != ""))
-                                    {
                                         Info.Bookmarks.Add(Convert.ToInt32(m));
-                                    }
                                 }
                                 break;
                             case "Tags":
@@ -289,9 +283,7 @@ namespace BMAPI.v1
                         float[] values = { 0, 0, 4, 0, 0, 100, 0, 0, 0 };
                         string[] reSplit = line.Split(',');
                         for (int i = 0; i < reSplit.Length; i++)
-                        {
                             values[i] = (float)Convert.ToDouble(reSplit[i]);
-                        }
                         tempTimingPoint.Time = (float)Convert.ToDouble(values[0]);
                         tempTimingPoint.BpmDelay = (float)Convert.ToDouble(values[1]);
                         tempTimingPoint.TimeSignature = Convert.ToInt32(values[2]);
@@ -375,8 +367,9 @@ namespace BMAPI.v1
                             }
                             string[] pts = reSplit[5].Split(new[] { "|" }, StringSplitOptions.None);
 
-                            //Always add the location as a point
-                            ((SliderObject)newObject).Points.Add(newObject.Location);
+                            //Todo: Check this
+                            if (Format <= 4)
+                                ((SliderObject)newObject).Points.Add(newObject.Location);
 
                             //Always exclude index 1, this will contain the type
                             for (int i = 1; i <= pts.Length - 1; i++)
@@ -388,9 +381,7 @@ namespace BMAPI.v1
                             ((SliderObject)newObject).RepeatCount = Convert.ToInt32(reSplit[6]);
                             float tempMaxPoints;
                             if (float.TryParse(reSplit[7], out tempMaxPoints))
-                            {
                                 ((SliderObject)newObject).MaxPoints = tempMaxPoints;
-                            }
                         }
                         if ((newObject.Type & HitObjectType.Spinner) > 0)
                         {
@@ -437,27 +428,21 @@ namespace BMAPI.v1
                             {
                                 List<int> temps = (List<int>)f1.GetValue(this);
                                 if (temps.Count != 0)
-                                {
                                     Save("General", "EditorBookmarks:" + string.Join(",", temps.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToArray()));
-                                }
                             }
                             break;
                         case "Bookmarks":
                             {
                                 List<int> temps = (List<int>)f1.GetValue(this);
                                 if (temps.Count != 0)
-                                {
                                     Save("Editor", "Bookmarks:" + string.Join(",", temps.Select(t => t.ToString(CultureInfo.InvariantCulture)).ToArray()));
-                                }
                             }
                             break;
                         case "Tags":
                             {
                                 List<string> temps = (List<string>)f1.GetValue(this);
                                 if (temps.Count != 0)
-                                {
                                     Save("Metadata", "Tags:" + string.Join(" ", temps.ToArray()));
-                                }
                             }
                             break;
                         case "Events":
@@ -601,18 +586,14 @@ namespace BMAPI.v1
             using (StreamWriter sw = new StreamWriter(filename))
             {
                 foreach (string l in WriteBuffer)
-                {
                     sw.WriteLine(l);
-                }
             }
         }
 
         private string GetSection(string name)
         {
             foreach (string k in BM_Sections.Keys.Where(k => k.Contains(name)))
-            {
                 return BM_Sections[k];
-            }
             return "";
         }
 
@@ -621,9 +602,7 @@ namespace BMAPI.v1
             using (MD5 md5 = MD5.Create())
             {
                 using (FileStream stream = File.OpenRead(fileName))
-                {
                     return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
-                }
             }
         }
     }
