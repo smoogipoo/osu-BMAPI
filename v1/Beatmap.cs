@@ -412,6 +412,9 @@ namespace BMAPI.v1
         /// <param name="filename">The file to save the beatmap as</param>
         public void Save(string filename)
         {
+            WriteBuffer.Clear();
+            SectionLength.Clear();
+
             CultureInfo lastCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US", false);
             Save("", "osu file format v13");
